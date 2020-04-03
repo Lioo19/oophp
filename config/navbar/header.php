@@ -6,7 +6,7 @@ return [
     // Use for styling the menu
     "wrapper" => null,
     "class" => "my-navbar rm-default rm-desktop",
- 
+
     // Here comes the menu items
     "items" => [
         [
@@ -38,11 +38,11 @@ return [
             "url" => "om",
             "title" => "Om denna webbplats.",
         ],
-        [
-            "text" => "Styleväljare",
-            "url" => "style",
-            "title" => "Välj stylesheet.",
-        ],
+        // [
+        //     "text" => "Styleväljare",
+        //     "url" => "style",
+        //     "title" => "Välj stylesheet.",
+        // ],
         [
             "text" => "Docs",
             "url" => "dokumentation",
@@ -53,10 +53,10 @@ return [
             "url" => "lek",
             "title" => "Testa och lek med test- och exempelprogram",
         ],
-        [
-            "text" => "Anax dev",
-            "url" => "dev",
-            "title" => "Anax development utilities",
-        ],
+        // [
+        //     "text" => "Anax dev",
+        //     "url" => "dev",
+        //     "title" => "Anax development utilities",
+        // ],
     ],
 ];

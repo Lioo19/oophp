@@ -7,7 +7,7 @@ return [
     "id" => "rm-menu",
     "wrapper" => null,
     "class" => "rm-default rm-mobile",
- 
+
     // Here comes the menu items
     "items" => [
         [
@@ -54,10 +54,10 @@ return [
             "url" => "lek",
             "title" => "Testa och lek med test- och exempelprogram",
         ],
-        [
-            "text" => "Anax dev",
-            "url" => "dev",
-            "title" => "Anax development utilities",
-        ],
+        // [
+        //     "text" => "Anax dev",
+        //     "url" => "dev",
+        //     "title" => "Anax development utilities",
+        // ],
     ],
 ];

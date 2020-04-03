@@ -1,3 +1,3 @@
-#### Footer col 1
+#### Om kursen
 
-Med brödtext i ett stycke som säger något trevligt om just detta block, eller kanske en lista av länkar.
+Vill du veta mer om kursen och dess innehåll? Det finner du här: [OOPHP på dbwebb](https://dbwebb.se/kurser/oophp-v5) och till [OOPHP på GitHub](https://github.com/dbwebb-se/oophp).

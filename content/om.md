@@ -4,7 +4,7 @@ views:
         region: sidebar-right
         template: anax/v2/block/default
         data:
-            meta: 
+            meta:
                 type: single
                 route: block/om-kursrepo
 
@@ -12,17 +12,16 @@ views:
         region: sidebar-right
         template: anax/v2/block/default
         data:
-            meta: 
+            meta:
                 type: single
                 route: block/om-redovisa
 ---
 Om
 =========================
 
-Detta innehåll är skrivet i markdown och du hittar innehållet i filen `content/om.md`.
+Kursen Objektorienterade webbteknologier ges vid Blekinge Tekniska Högskola, just nu helt på distans då Corona härjar i världen.
 
-Skriv några kloka ord om kursen?
+Hämtat från kursens sida:  
+*Kursen Objektorienterade webbteknologier, a.k.a. oophp, fokuserar på objektorienterade programmeringstekniker i programmeringsspråket PHP. Klassiska objektorienterade konstruktioner hanteras tillsammans med objektorienterad programmering i webbaserat ramverk tillsammans med databaser samt enhetstestning.*
 
-Lägg till en fin och representativ bild för kursen, enligt ditt eget val.
-
-[FIGURE src=image/car.png?w=740&filter=grayscale&f1=colorize,0,30,0,0 caption="En fin bil som demobild, lite oklart hur den är representativ, men ändå..."]
+[FIGURE src=image/php.jpg?w=740 caption="Väldigt talande bild för kursen, det är ju trots allt PHP det handlar om!"]

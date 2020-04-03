@@ -1,3 +1,4 @@
-#### Footer col 3
+#### Nyfiken på skolan?
 
-Med brödtext i ett stycke som säger något trevligt om just detta block, eller kanske en lista av länkar.
+Vill du veta mer om Blekinge Tekniska Högskola?  
+Det finner du [här](https://www.bth.se/)

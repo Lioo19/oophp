@@ -1,3 +1,3 @@
-#### Footer col 2
+#### Den här sidan på GitHub
 
-Med brödtext i ett stycke som säger något trevligt om just detta block, eller kanske en lista av länkar.
+Nyfiken på vad som finns bakom den här sidan? Kika in på GitHub [här](https://github.com/Lioo19/oophp).
