@@ -53,6 +53,11 @@ return [
             "url" => "lek",
             "title" => "Testa och lek med test- och exempelprogram",
         ],
+        [
+            "text" => "Gissa numret",
+            "url" => "guess-game",
+            "title" => "Spela gissningsspel",
+        ],
         // [
         //     "text" => "Anax dev",
         //     "url" => "dev",
