@@ -4,6 +4,6 @@ namespace Lioo19\Guess;
 /**
  * Exception class for GuessException.
  */
-class GuessException extends Exception
+class GuessException extends \Exception
 {
 }

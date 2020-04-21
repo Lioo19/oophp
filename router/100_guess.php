@@ -4,8 +4,6 @@
  */
 //var_dump(array_keys(get_defined_vars()));
 
-//KVAR ATT FIXA WIN OR LOSE START OVER
-
 /**
  * Initiate the game and make a redirect
  */
@@ -44,7 +42,7 @@ $app->router->get("guess/play", function () use ($app) {
     ];
 
     $app->page->add("guess/play", $data);
-    $app->page->add("guess/debug");
+    // $app->page->add("guess/debug");
 
     return $app->page->render([
         "title" => $title,
@@ -78,8 +76,10 @@ $app->router->post("guess/play", function () use ($app) {
                 $winorlose = "yes";
                 $guess->tries = 6;
             }
-        } catch (GuessException $e) {
-            $res = "<h3>Out of bounds: " . get_class($e) . "</h3><hr>";
+        } catch (Lioo19\Guess\GuessException $e) {
+            $res = $e->getMessage();
+        } catch (TypeError $e) {
+            $res = "Bara siffror går att gissa på!";
         }
         $_SESSION["tries"] = $guess->triesLeft();
         $_SESSION["res"] = $res;

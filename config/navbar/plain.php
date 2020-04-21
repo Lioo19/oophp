@@ -5,7 +5,7 @@
 return [
     // Use for styling the menu
     "class" => "my-navbar",
- 
+
     // Here comes the menu items/structure
     "items" => [
         [
@@ -32,6 +32,11 @@ return [
             "text" => "Verktyg",
             "url" => "verktyg",
             "title" => "Verktyg och möjligheter för utveckling.",
+        ],
+        [
+            "text" => "100",
+            "url" => "dice",
+            "title" => "Spela tärningsspel",
         ],
     ],
 ];

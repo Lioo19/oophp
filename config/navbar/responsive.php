@@ -59,6 +59,11 @@ return [
             "url" => "guess-game",
             "title" => "Spela gissningsspel",
         ],
+        [
+            "text" => "100",
+            "url" => "dice",
+            "title" => "Spela tärningsspel",
+        ],
         // [
         //     "text" => "Anax dev",
         //     "url" => "dev",
