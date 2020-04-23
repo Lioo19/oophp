@@ -10,4 +10,6 @@ Du har sedan två val, kasta igen eller spara resultatet.
 Om du någon gång slår en etta på någon av tärningarna är din runda genast över och ditt resultat går förlorat.  
 Därefter är det datorns tur, som får samma typ av runda och samma typ av val.
 
+Vem som börjar spela väljs av ett osynligt tärningskast.
+
 [Starta ett nytt spel! ](dice/init)

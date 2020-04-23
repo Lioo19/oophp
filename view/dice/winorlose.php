@@ -3,11 +3,9 @@
 namespace Anax\View;
 
 /**
- * Render content within an article.
+ * Page for when game is over!
  */
 
-// Show incoming variables and view helper functions
-//echo showEnvironment(get_defined_vars(), get_defined_functions());
 
 ?>
 <head>
@@ -17,53 +15,18 @@ namespace Anax\View;
 </head>
 
 <h1> Kasta Tärning </h1>
-<h4>Vinn över datorn, först till 100!</h4>
+<div>
+    <h3>Spelet är slut!</h3>
 
-<!-- <?php
-    echo "<pre>dataNUMBER";
-    var_dump($data["number"]);
-    echo "data";
-    var_dump($data);
-    echo "guessedNumber";
-    var_dump($guessedNumber);
-    echo"</pre>";?> -->
-
-    <!-- <h1><?= $title ?></h1> -->
-    <div style="float: left;">
-        <p>Current unsaved points:
-            <!-- <?= $unsaved ?> -->
-        </p>
-        <p>
-            <!-- <?php foreach ($graphic as $value) : ?>
-                <i class="dice-sprite <?= $value ?>"></i>
-            <?php endforeach; ?> -->
-            Hej
-        </p>
-        <form method="POST">
-            <input type="submit" class="button" name="throw" value="Slå dina tärningar"/>
-            <input type="submit" class="button" name="save" value="Spara"/>
-            <!-- <input type="submit" class="button" name="throwComputer" value="Slå för datorn"/> -->
-            <input type="submit" class="button" name="restart" value="Starta om spelet"/>
-        </form>
-    </div>
     <div style="float: right;">
-        <!-- <?= $scoreBoard ?> -->
+        <?= $scoreBoard ?>
     </div>
 
-
-<?php if ($throw) : ?>
-    <p>Your guess is <?= $guessedNumber ?>: <b> <?= $res ?></b></p>
-    <p>You have <?= $tries ?> tries left </p>
-<?php endif; ?>
-
-<!--
-<?php if ($startOver) : ?>
-    <p>The game has been reset</p>
-<?php endif; ?>
-
-<?php if ($cheat) : ?>
-    <p>Cheat: The number is <b> <?= $number ?> </b></p>
-<?php endif; ?> -->
-
+    <p> Vinnaren blev <strong><?= $winningPlayer ?></strong>!!</p>
+    <p>Vill du spela igen? </p>
+    <form method="POST">
+        <input type="submit" class="button" name="restart" value="Starta om spelet"/>
+    </form>
+</div>
 <!-- <pre>
-<?= var_dump($_POST); ?> -->
+<?= var_dump($_SESSION); ?> -->

@@ -29,13 +29,22 @@ class Dice
         $this->lastRoll = null;
     }
 
+    /**
+    * method to throwDice
+    * @return int $lastRoll
+    */
     public function throwDice()
     {
         $this->thrown = rand(1, $this->sides);
         $this->lastRoll = $this->thrown;
-        return $this->thrown;
+        return $this->lastRoll;
     }
 
+    /**
+    * method to access the lastroll
+    *
+    * @return int $lastRoll
+    */
     public function getLastRoll()
     {
         return $this->lastRoll;

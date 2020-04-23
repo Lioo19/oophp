@@ -8,96 +8,143 @@ class DicePlayer
 {
 
     /**
-    * @var int $unsavedScore   The current unsaved score for player
-    * @var int $savedScore     The score that the player has collected
+    * @var int $savedScore     The current, saved score for player
+    * @var string $playerName     Name of the player playing
+    * @var int $noDice         The number of dice
+    * @var DiceHand $diceHand       The dicehand, relying on the class diceHand
     */
 
-    protected $playerName;
-    protected $unsavedScore;
-    protected $savedScore;
+    private $playerName;
+    private $savedScore;
+    private $noDice;
+    private $diceHand;
 
     /**
      * Constructor to create player
      *
-     * @param int $playerName    Name from player input
-     * @param int $unsavedScore  Score for current rolles, not saved
-     * @param int $savedScore    Score that has been saved by player
+     * @param string $playerName    Name from player input
+     * @param int $savedScore       Saved Score
+     * @param int $noDice           The number of dice
+     * @param int $noSides          The number of sides on a dice, default 6
+     * @param DiceHand $diceHand    diceHand
      */
-    public function __construct(string $playerName, int $savedScore = null)
+    public function __construct(string $playerName, int $noDice = 2, int $noSides = 6, int $savedScore = null)
     {
+        $this->savedScore = $savedScore;
+        $this->noDice = $noDice;
+        $this->noSides = $noSides;
         $this->playerName = $playerName;
-        $this->unsavedScore = 0;
-        if ($savedScore == null) {
-            $this->savedScore = 0;
-        } else {
-            $this->savedScore = $savedScore;
-        }
+        $this->diceHand = new DiceHand($this->noDice, $this->noSides);
     }
 
-
     /**
-    * Function to save the score
-    * Also resets the current score to 0 (might remove this?)
-    *
-    * @return void
-    */
-    public function saveScore()
+     * Throw all dices in playerHand
+     *
+     * @return void.
+     */
+
+    public function throw()
     {
-        $this->savedScore += $this->unsavedScore;
-        $this->unsavedScore = 0; //is this neccessary??
-    }
-
-
-    /**
-    * Function to reset the unsavedScore variable
-    *
-    */
-    public function resetUnsaved()
-    {
-        $this->unsavedScore = 0;
+        $this->diceHand->throwDiceHand();
     }
 
     /**
-    * Adds the values of the dice to the unsaved score
-    *
-    * @param int $value Is the value that should be added to the current,
-    * unsavedScore
-    *
-    */
-    public function addValues(int $value = 0)
-    {
-        $this->unsavedScore = $this->unsavedScore + $value;
-    }
+     * Return player score
+     *
+     * @return int $score      Player score
+     */
 
-    /**
-    * Fetch the variable savedScore
-    *
-    * @return int of the savedScore
-    *
-    */
     public function getSavedScore()
     {
         return $this->savedScore;
     }
 
     /**
-    * Fetch the variable unsavedScore
+    * Retrive diceHand
     *
-    * @return int of the unsavedScore
-    *
+    * @return DiceHand class
     */
-    public function getUnsavedScore()
+    public function getDiceHand()
     {
-        return $this->unsavedScore;
+        return $this->diceHand;
     }
 
     /**
-    * method for getting the name of current player
+    * Reset for diceHand
     *
-    * @return string name of the player
+    * @return object new DiceHand
     */
-    public function getName()
+    public function resetDiceHand()
+    {
+        return $this->diceHand = new DiceHand($this->noDice, $this->noSides);
+    }
+
+    /**
+     * Return all values in players Hand
+     *
+     * @return array   Array cont. dice values
+     */
+
+    public function getAllValues()
+    {
+        return $this->diceHand->getValuesLastRoll();
+    }
+
+    /**
+     * Get the sum of players hand
+     *
+     * @return int
+     */
+
+    public function sum()
+    {
+        return $this->diceHand->sum();
+    }
+
+
+    /**
+     * Get player name
+     *
+     * @return string
+     */
+
+    public function getPlayerName()
     {
         return $this->playerName;
+    }
+
+    /**
+    * Add values to the saved Player score
+    * @param int $unsavedValues   All values from dice of this round
+    *
+    * @return void
+    */
+
+    public function addValuesToScore(int $unsavedValues = 0)
+    {
+        $this->savedScore = $this->savedScore + $unsavedValues;
+    }
+
+    /**
+    * ONLY TO BE USED FOR COMPUTER CHOICE
+    * Logic to make decision for computer
+    * Right now static but could be changed depending on dice?
+    *
+    * @param int $unsavedValue
+    * @return bool true if computer should save the throw, false if not.
+    */
+    public function computerSave(int $unsavedValue = 0)
+    {
+        $save = false;
+
+        if ($this->savedScore + $unsavedValue >= 100) {
+            $save = true;
+        } else if ($unsavedValue >= 20) {
+            $save = true;
+        } else {
+            $save = false;
+        }
+
+        return $save;
     }
 }

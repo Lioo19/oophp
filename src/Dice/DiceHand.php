@@ -13,8 +13,8 @@ class DiceHand
     * @var int  $values  Array consisting of last roll of the dices.
     */
     private $dices;
-    // private $values; //not neccessary, since used in method instead
     private $nrOfSides;
+    private $values;
 
 
     /**
@@ -25,44 +25,38 @@ class DiceHand
     */
     public function __construct(int $dices = 2, int $nrOfSides = 6)
     {
-     // if (!(is_int($nrOfSides) || $nrOfSides > 0)) {
-     //     throw new SidesException("Sides on dice need to be at least 1");
-
         $this->dices  = [];
+        $this->values  = [];
         $this->nrOfSides = $nrOfSides;
 
         for ($i = 0; $i < $dices; $i++) {
             array_push($this->dices, new Dice($nrOfSides));
-            // $this->values[] = null;
         }
     }
     /**
      * Roll all dice so that the new number is facing upwards
-     * Save numbers in array values(is this neccessary?)
+     * Save numbers in array values
      *
      * @return void.
      */
     public function throwDiceHand()
     {
-        for ($j=0; $j < count($this->dices); $j++) {
-            $throw = $this->dices[$j]->throwDice();
-            // array_push($this->values, $throw);
+        $this->values = [];
+        $noDice = count($this->dices);
+        for ($j=0; $j < $noDice; $j++) {
+            $this->dices[$j]->throwDice();
+            $this->values[] = $this->dices[$j]->getLastRoll();
         }
     }
 
     /**
-     * Get all the values from last roll
-     * By creating a array of all nums and returning that
+     * Returning all values from last roll
      *
      * @return array with them values
      */
-    public function allValuesLastRoll()
+    public function getValuesLastRoll()
     {
-        $resArr = [];
-        for ($i = 0; $i < count($this->dices); $i++) {
-            array_push($resArr, $this->dices[$i]->getLastRoll());
-        }
-        return $resArr;
+        return $this->values;
     }
 
     /**
@@ -73,7 +67,7 @@ class DiceHand
      */
     public function sum()
     {
-        $res = array_sum($this->allValuesLastRoll());
+        $res = array_sum($this->getValuesLastRoll());
         return $res;
     }
 
@@ -86,22 +80,5 @@ class DiceHand
     public function average()
     {
         return ( $this->sum() / count($this->dices));
-    }
-
-    /**
-    * Check for value, standard case 1
-    *
-    * @param int @checkForThis The value searched for
-    *
-    * @return bool True if any dice has the value
-    */
-    public function checkForValue(int $checkForThis = 1)
-    {
-        foreach ($this->dices as $dice) {
-            if ($dice->getLastRoll() == $checkForThis) {
-                return true;
-            }
-        }
-        return false;
     }
 }

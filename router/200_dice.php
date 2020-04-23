@@ -8,7 +8,7 @@
  * Initiate the game and let player choose params
  */
 $app->router->get("dice/init", function () use ($app) {
-    // Initiate the session for game start
+    // Display starting page
 
     return $app->response->redirect("dice/startdice");
 });
@@ -19,22 +19,16 @@ $app->router->get("dice/init", function () use ($app) {
 $app->router->get("dice/startdice", function () use ($app) {
     $title = "100";
 
-    $app->session->delete("res");
-    $app->session->delete("number");
-    $app->session->delete("tries");
-    $app->session->delete("guess");
-    $app->session->delete("guessedNumber");
-    $app->session->delete("makeGuess");
-    $app->session->delete("cheat");
-    $app->session->delete("startOver");
-    $app->session->delete("noSides");
+    $app->session->delete("turnScore");
+    $app->session->delete("turn");
+    $app->session->delete("playing");
+    $app->session->delete("sumLastRoll");
+    $app->session->delete("getValuesLastRoll");
     $app->session->delete("noDice");
-    $app->session->delete("dice");
-    $app->session->delete("throw");
-    $app->session->delete("lastRoll");
-    $app->session->delete("unsavedScore");
+    $app->session->delete("noSides");
     $app->session->delete("playerName");
-    $app->session->delete("gocomputergo");
+    $app->session->delete("dice");
+
 
     $data = [
         "noDice" => $noDice ?? null,
@@ -43,7 +37,7 @@ $app->router->get("dice/startdice", function () use ($app) {
     ];
 
     $app->page->add("dice/startdice", $data);
-    $app->page->add("dice/debug");
+    // $app->page->add("dice/debug");
 
 
     return $app->page->render([
@@ -61,9 +55,8 @@ $app->router->post("dice/startdice", function () use ($app) {
     $noSides = $_POST["noSides"] ?? 6;
     $playerName = $_POST["playerName"] ?? "Player 1";
 
-    $_SESSION["noDice"] = $noDice;
-    $_SESSION["noSides"] = $noSides;
-    $_SESSION["playerName"] = $playerName;
+    $_SESSION["dice"] = new Lioo19\Dice\DiceGame($playerName, $noDice, $noSides);
+    $dice = $_SESSION["dice"];
 
     return $app->response->redirect("dice/playdice");
 });
@@ -75,38 +68,57 @@ $app->router->post("dice/startdice", function () use ($app) {
 $app->router->get("dice/playdice", function () use ($app) {
     $title = "100";
 
-    $noDice = $_SESSION["noDice"] ?? 2;
-    $noSides = $_SESSION["noSides"] ?? 6;
-    $playerName = $_SESSION["playerName"] ?? "Player 1";
-
-    $_SESSION["dice"] = new Lioo19\Dice\DiceGame($playerName, $noDice, $noSides);
     $dice = $_SESSION["dice"];
 
-    // var_dump($app->session);
-    var_dump($dice->human->getUnsavedScore());
+    $anyOnes = $dice->anyOnes(); //checkar om det finns några ettor i dice playing getAllValues
+    $computerPlaying = $dice->whoIsPlaying(); //check om datorn är den som spelar (true)
+    $turn = $dice->getTurn() ?? null; //tar fram turn
+    $turnScore = $turn->getTurnScore() ?? null; //tar fram turnScore
+    $playing = $dice->getPlaying() ?? null; //tar fram vem som spelar
+    $playingHand = $playing->getDiceHand() ?? null; //tar fram spelarens hand
+    $getValuesLastRoll = $playingHand->getValuesLastRoll() ?? null; //tar fram senaste värden
+    $sumLastRoll = $playingHand->sum() ?? null; //summerar
+    $computerChoseSave = null;
+
+    if ($computerPlaying) {
+        $computerChoseSave = $dice->goComputerGo() ?? null;
+    }
 
     $scoreBoard = $dice->generateScoreBoard();
+
+    $_SESSION["turnScore"] = $turnScore;
+    $_SESSION["getValuesLastRoll"] = $getValuesLastRoll;
+    $_SESSION["turn"] = $turn;
+    $_SESSION["playing"] = $playing;
+    $_SESSION["sumLastRoll"] = $sumLastRoll;
 
     $restart = $_SESSION["restart"] ?? null;
     $throw = $_SESSION["throw"] ?? null;
     $save = $_SESSION["save"] ?? null;
-    $lastRoll = $_SESSION["lastRoll"] ?? null;
-    $unsavedScore = $_SESSION["unsavedScore"] ?? null;
-    $gocomputergo = $_SESSION["gocomputergo"] ?? null;
-
+    $newturn = $_SESSION["newturn"] ?? null;
 
     $data = [
+        "playing" => $playing,
+        "turn" => $turn,
+        "playingHand" => $playingHand,
+        "turnScore" => $turnScore,
+        "sumLastRoll" => $sumLastRoll,
+        "getValuesLastRoll" => $getValuesLastRoll,
+        "computerPlaying" => $computerPlaying,
+        "anyOnes" => $anyOnes,
+        "computerChoseSave" => $computerChoseSave,
         "restart" => $restart,
         "throw" => $throw,
         "scoreBoard" => $scoreBoard,
-        "lastRoll" => $lastRoll,
-        "unsavedScore" => $unsavedScore,
-        "save" => $save,
-        "gocomputergo" => $gocomputergo
+        "save" => $save
     ];
 
+    $computerChoseSave = null;
+    $playingHand = null;
+    $turn = null;
+
     $app->page->add("dice/playdice", $data);
-    $app->page->add("dice/debug");
+    // $app->page->add("dice/debug");
 
 
     return $app->page->render([
@@ -120,12 +132,12 @@ $app->router->get("dice/playdice", function () use ($app) {
  */
 $app->router->post("dice/playdice", function () use ($app) {
     $title = "100";
-    $dice = $_SESSION["dice"] ?? null;
-    $gocomputergo = $_SESSION["gocomputergo"] ?? null;
+    $dice = $_SESSION["dice"];
 
     $restart = $_POST["restart"] ?? null;
     $throw = $_POST["throw"] ?? null;
     $save = $_POST["save"] ?? null;
+    $newturn = $_POST["newturn"] ?? null;
     $throwcomputer = $_POST["throwcomputer"] ?? null;
 
     if ($restart) {
@@ -134,17 +146,18 @@ $app->router->post("dice/playdice", function () use ($app) {
         return $app->response->redirect("dice/throw");
     } elseif ($save) {
         return $app->response->redirect("dice/save");
+    } elseif ($newturn) {
+        return $app->response->redirect("dice/newturn");
     } elseif ($throwcomputer) {
-        return $app->response->redirect("dice/gocomputergo");
+        $computerChoseSave = $dice->goComputerGo();
+        if ($computerChoseSave) {
+            return $app->response->redirect("dice/save");
+        } else {
+            return $app->response->redirect("dice/throw");
+        }
+    } else {
+        return $app->response->redirect("dice/playdice");
     }
-
-    $_SESSION["throw"] = $throw;
-    $_SESSION["restart"] = $restart;
-    $_SESSION["save"] = $save;
-    $_SESSION["gocomputergo"] = $gocomputergo;
-    $_SESSION["throwcomputer"] = $throwcomputer;
-
-    return $app->response->redirect("dice/playdice");
 });
 
 /**
@@ -154,53 +167,43 @@ $app->router->post("dice/playdice", function () use ($app) {
 $app->router->get("dice/throw", function () use ($app) {
     $dice = $_SESSION["dice"];
 
-    //gocomputergo is either false, then human cont., or true in which is comps turn
-    $gocomputergo = $dice->makeThrow();
-    $lastRoll = $dice->diceHand->allValuesLastRoll();
-    $unsavedScore = $dice->human->getUnsavedScore();
-
-    $_SESSION["gocomputergo"] = $gocomputergo;
-    $_SESSION["lastRoll"] = $lastRoll;
-    $_SESSION["unsavedScore"] = $unsavedScore;
+    $dice->makeThrow();
 
     return $app->response->redirect("dice/playdice");
 });
 
 /**
  * Save dice values
+ * and reset params for round
  */
 
 $app->router->get("dice/save", function () use ($app) {
     $dice = $_SESSION["dice"];
 
-    $dice->human->saveScore();
-    $gocomputergo = true;
+    $dice->save();
+
+    $_SESSION["turn"] = null;
+    $_SESSION["playing"] = null;
+    $_SESSION["sumLastRoll"] = null;
+    $_SESSION["turnScore"] = null;
+
 
     if ($dice->winner()) {
         return $app->response->redirect("dice/winorlose");
     } else {
-        $_SESSION["gocomputergo"] = $gocomputergo;
-        return $app->response->redirect("dice/playdice");
+        return $app->response->redirect("dice/newturn");
     }
 });
 
 /**
- * Play for computer
- */
-
-$app->router->get("dice/gocomputergo", function () use ($app) {
+* continue to new Turn
+*/
+$app->router->get("dice/newturn", function () use ($app) {
     $dice = $_SESSION["dice"];
 
-    $dice->goComputerGo();
+    $dice->setNext();
 
-    $computerSaved = $dice->computer->getSavedScore();
-    $_SESSION["computerSaved"] = $computerSaved;
-
-    if ($dice->winner()) {
-        return $app->response->redirect("dice/winorlose");
-    } else {
-        return $app->response->redirect("dice/playdice");
-    }
+    return $app->response->redirect("dice/playdice");
 });
 
 /**
@@ -209,16 +212,31 @@ $app->router->get("dice/gocomputergo", function () use ($app) {
 $app->router->get("dice/winorlose", function () use ($app) {
     $title = "Spelet är över!";
     $dice = $_SESSION["dice"];
-    // $players = $_SESSION["players"];
-    // $currentPlayer = $dicegame->getCurrentPlayer() ?? null;
+    $winningPlayer = $dice->winner() ?? null;
+    $scoreBoard = $dice->generateScoreBoard();
+
 
     $data = [
-        "dice" => $dice
+        "winningPlayer" => $winningPlayer,
+        "scoreBoard" => $scoreBoard
     ];
 
     $app->page->add("dice/winorlose", $data);
 
     return $app->page->render([
-        "title" => $title,
+        "title" => $title
     ]);
+});
+
+/**
+ * Post route for restarting game when in winorlose
+ */
+$app->router->post("dice/winorlose", function () use ($app) {
+    $dice = $_SESSION["dice"];
+
+    $restart = $_POST["restart"] ?? null;
+
+    if ($restart) {
+        return $app->response->redirect("dice/init");
+    }
 });
