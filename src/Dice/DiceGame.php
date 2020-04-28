@@ -1,5 +1,5 @@
 <?php
-namespace Lioo19\Dice; 
+namespace Lioo19\Dice;
 
 /**
  * Class for entire diceGame
@@ -10,7 +10,6 @@ namespace Lioo19\Dice;
  */
 class DiceGame
 {
-
     /**
     * @var DicePlayer $human - The user playing
     * @var DiceComputer $computer - The computer playing

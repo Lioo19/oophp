@@ -125,7 +125,19 @@ class DicePlayerTest extends TestCase
         $this->assertFalse($res2);
 
         $dicePlayer2 = new DicePlayer("Datorn2", 3, 6, 10);
-        $res3 = $dicePlayer2->computerSave(20);
+        $res3 = $dicePlayer2->computerSave(25);
         $this->assertTrue($res3);
+
+        $dicePlayer3 = new DicePlayer("Datorn3", 2, 6, 10);
+        $res4 = $dicePlayer3->computerSave(20);
+        $this->assertTrue($res4);
+
+        $dicePlayer4 = new DicePlayer("Datorn4", 1, 6, 10);
+        $res5 = $dicePlayer4->computerSave(12);
+        $this->assertTrue($res5);
+
+        $dicePlayer5 = new DicePlayer("Datorn4", 1, 6, 10);
+        $res6 = $dicePlayer5->computerSave(10);
+        $this->assertFalse($res6);
     }
 }

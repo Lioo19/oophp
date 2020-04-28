@@ -7,7 +7,6 @@ namespace Lioo19\Dice;
  */
 class DiceHand
 {
-
     /**
     * @var Dice $dices   Array consisting of dices.
     * @var int  $values  Array consisting of last roll of the dices.
@@ -33,6 +32,7 @@ class DiceHand
             array_push($this->dices, new Dice($nrOfSides));
         }
     }
+
     /**
      * Roll all dice so that the new number is facing upwards
      * Save numbers in array values
@@ -57,6 +57,16 @@ class DiceHand
     public function getValuesLastRoll()
     {
         return $this->values;
+    }
+
+    /**
+     * Get nrOfSides
+     *
+     * @return int
+     */
+    public function getNrOfSides()
+    {
+        return $this->nrOfSides;
     }
 
     /**

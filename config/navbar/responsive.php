@@ -49,11 +49,11 @@ return [
             "url" => "dokumentation",
             "title" => "Dokumentation av ramverk och liknande.",
         ],
-        [
-            "text" => "Test &amp; Lek",
-            "url" => "lek",
-            "title" => "Testa och lek med test- och exempelprogram",
-        ],
+        // [
+        //     "text" => "Test &amp; Lek",
+        //     "url" => "lek",
+        //     "title" => "Testa och lek med test- och exempelprogram",
+        // ],
         [
             "text" => "Gissa numret",
             "url" => "guess-game",
@@ -61,13 +61,13 @@ return [
         ],
         [
             "text" => "100",
-            "url" => "dice",
+            "url" => "dice1",
             "title" => "Spela tärningsspel",
         ],
-        // [
-        //     "text" => "Anax dev",
-        //     "url" => "dev",
-        //     "title" => "Anax development utilities",
-        // ],
+        [
+            "text" => "Anax dev",
+            "url" => "dev",
+            "title" => "Anax development utilities",
+        ],
     ],
 ];

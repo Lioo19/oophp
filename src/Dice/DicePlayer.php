@@ -139,7 +139,20 @@ class DicePlayer
 
         if ($this->savedScore + $unsavedValue >= 100) {
             $save = true;
-        } else if ($unsavedValue >= 20) {
+        } else if ($this->noDice <= 2) {
+            switch ($this->noDice) {
+                case 1:
+                    if ($unsavedValue >= 12) {
+                        return true;
+                    }
+                    break;
+                case 2:
+                    if ($unsavedValue >= 20) {
+                        return true;
+                    }
+                    break;
+            }
+        } else if ($unsavedValue >= 25) {
             $save = true;
         } else {
             $save = false;

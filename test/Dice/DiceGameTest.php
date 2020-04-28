@@ -5,7 +5,7 @@ namespace Lioo19\Dice;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Testclass for Dice class
+ * Testclass for DiceGame class
  */
 class DiceGameTest extends TestCase
 {
