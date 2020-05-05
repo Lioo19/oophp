@@ -18,7 +18,6 @@ if (!$res) {
         <td><?= $id ?></td>
         <td><?= $row->id ?></td>
         <td><img class="thumb" src="<?= $row->image ?>"></td>
-        <?php var_dump($row->image) ?>
         <td><?= $row->title ?></td>
         <td><?= $row->year ?></td>
     </tr>

@@ -8,7 +8,6 @@ namespace Anax\View;
     <fieldset>
     <legend>Ändra</legend>
     <input type="hidden" name="id" value="<?= $movie->id ?>"/>
-    <?php var_dump($movie) ?>
 
     <p>
         <label>Title:<br>

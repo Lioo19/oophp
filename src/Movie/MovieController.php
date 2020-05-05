@@ -268,7 +268,7 @@ class MovieController implements AppInjectableInterface
         $this->connection();
 
         $id = $request->getPost("id") ?: $request->getGet("id");
-        var_dump($id);
+        // var_dump($id);
         $title = $request->getPost("title", "Titel");
         $year = $request->getPost("year", 9999);
         $image = $request->getPost("image", "img/default.jpg");
@@ -297,7 +297,7 @@ class MovieController implements AppInjectableInterface
 
         $sql = "SELECT * FROM movie WHERE id = ?;";
         $chosenMovie = $db->executeFetchAll($sql, [$id]);
-        var_dump($chosenMovie);
+        // var_dump($chosenMovie);
         $chosenMovie = $chosenMovie[0];
 
         $data = [

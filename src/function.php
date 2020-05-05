@@ -14,8 +14,6 @@ function getGet($key, $default = null)
         : $default;
 }
 
-
-
 /**
  * Get value from POST variable or return default value.
  *
