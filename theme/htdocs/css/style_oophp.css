@@ -725,6 +725,7 @@ ul {
   width: 101.04166667%;
   margin-left: -0.52083333%;
   margin-right: -0.52083333%;
+  margin-bottom: 1em;
 }
 .row::after {
   content: "";
@@ -785,19 +786,17 @@ ul {
   margin-left: 0.52083333%;
   margin-right: 0.52083333%;
   color: #f5f5f5;
-  margin-bottom: 6px;
-}
-.region-header-col-2 a {
-  font-size: 1.5em;
-  line-height: 1;
-  font: MyriadPro-Regular, "Myriad Pro Regular", MyriadPro, 'Myriad Pro', Helvetica, Arial, sans-serif/1.5 MyriadPro-Regular, "Myriad Pro Regular", MyriadPro, 'Myriad Pro', Helvetica, Arial, sans-serif;
+  margin-bottom: 0.6em;
 }
 .rm-desktop li a {
-  padding: 0.4em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  padding-bottom: 0.4em;
+  padding-top: 1em;
+  font-size: 20px;
 }
 a.rm-button .rm-button-face-1 {
-  font-size: 2.375em;
-  line-height: 1.26315789;
+  font-size: 24px;
   color: #f5f5f5;
 }
 .site-logo-text a {
@@ -983,6 +982,9 @@ a.rm-button .rm-button-face-1 {
   margin-left: 0.52083333%;
   margin-right: 0.52083333%;
 }
+.footer-column-x {
+  padding: 0.6em;
+}
 .footer-column-x a {
   color: #b5b5b5;
 }
@@ -1025,10 +1027,43 @@ a.rm-button .rm-button-face-1 {
 .figure.screenshot img {
   width: 432px;
 }
+img.thumb {
+  max-width: 150px;
+}
 .rm-mobile li {
   font-size: 1.25em;
   line-height: 1.2;
   margin-left: 8.85416667%;
+}
+.header {
+  margin: 0.4em 0.4em 2.4em 0.4em;
+}
+.header a {
+  padding: 0.6em;
+  background-color: #b5b5b5;
+  font-size: 22px;
+  text-decoration: none;
+  text-shadow: 2px 2px #c2c2c2;
+  color: #f5f5f5;
+}
+fieldset.moviefield {
+  margin-top: 0.6em;
+}
+a.moviebutton {
+  padding: 0.4em;
+  background-color: #bababa;
+  font-size: 16px;
+  text-decoration: none;
+  text-shadow: 1px 1px #c2c2c2;
+  color: #f5f5f5;
+}
+th {
+  font-size: 1.2em;
+  padding-right: 1em;
+  border-bottom: 1px solid #b5b5b5;
+}
+td {
+  margin: 0.4em;
 }
 .row::after {
   content: "";

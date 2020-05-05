@@ -23,6 +23,7 @@
 
  .row {
      #desinax-vgrid.row();
+     margin-bottom: 1em;
     // background-color: #0f0;
      //margin-bottom: 12px;
  }
@@ -68,20 +69,20 @@
  .region-header-col-2 {
      #desinax-vgrid.column(18);
      color: @LinkCol;
-     margin-bottom: 6px;
+     margin-bottom: 0.6em;
 
-     a {
-         #desinax-hgrid.fontSize(@fontSizeH4);
-         #desinax-hgrid.font(@fontFamilyHeadings);
-     }
  }
 
 .rm-desktop li a {
-    padding: 0.4em;
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    padding-bottom: 0.4em;
+    padding-top: 1em;
+    font-size: 20px;
 }
 
 a.rm-button .rm-button-face-1 {
-    #desinax-hgrid.fontSize(@fontSizeH1);
+    font-size: 24px;
     color: @LinkCol;
 }
 
@@ -231,8 +232,13 @@ a.rm-button .rm-button-face-1 {
 
  /*Footer*/
 
+
  .footer-column {
      #desinax-vgrid.column(@columns / 3);
+ }
+
+ .footer-column-x {
+    padding: 0.6em;
  }
 
  .footer-column-x a {
@@ -279,6 +285,10 @@ a.rm-button .rm-button-face-1 {
      }
  }
 
+ img.thumb {
+     max-width: 150px;
+ }
+
 //Mobile things
 .rm-mobile li {
     #desinax-hgrid.fontSize(@fontSizeH6);
@@ -286,11 +296,52 @@ a.rm-button .rm-button-face-1 {
 
 }
 
- .row::after {
-     content: "";
+// MOVIE THINGS
+.header {
+    // background-color: @LinkHovCol;
+    margin: 0.4em 0.4em 2.4em 0.4em;
+
+    a {
+        padding: 0.6em;
+        background-color: @LinkHovCol;
+        font-size: 22px;
+        text-decoration: none;
+        text-shadow: 2px 2px darken(@LinkCol, 20%);
+        color: @LinkCol;
+        // border: 2px solid darken(@LinkHovCol, 5%);
+    }
+}
+
+fieldset.moviefield {
+    margin-top: 0.6em;
+}
+
+a.moviebutton {
+    padding: 0.4em;
+    background-color: lighten(@LinkHovCol, 2%);
+    font-size: 16px;
+    text-decoration: none;
+    text-shadow: 1px 1px darken(@LinkCol, 20%);
+    color: @LinkCol;
+}
+
+th {
+    font-size: 1.2em;
+    padding-right: 1em;
+    border-bottom: 1px solid @LinkHovCol;
+}
+
+td {
+    margin: 0.4em;
+}
+
+
+
+.row::after {
+    content: "";
     // display: block;
     // clear: both;
- }
+}
 
 
 // Enable style from the module and optinally add customized layout

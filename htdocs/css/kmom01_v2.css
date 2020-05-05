@@ -1,0 +1,365 @@
+/*!
+ * LESS version of the stylesheet for design kmom01.
+ *
+ * This stylesheet is for the design course and kmom01. Its intention is to
+ * use kmom01.css and lessify the style and use this as a wrapper for the new
+ * style.
+ */
+/**
+ * Internal self contained modules, save in directory module/.
+ */
+/**
+ * Layout style for general structure of header, navbar, main, footer
+ * and other regions of the page including route specific styles.
+ */
+/**
+ * Variables
+ */
+html {
+  overflow-y: scroll;
+  background-color: white;
+}
+body {
+  margin: 0 ;
+  background-color: gray;
+}
+.outer-wrap,
+.inner-wrap {
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 0 0.5em;
+}
+/**
+ * General layout
+ */
+.inner-wrap {
+  margin: 0;
+}
+.region-main {
+  width: 65%;
+  text-align: center;
+  display: inline-block;
+  min-height: 30em;
+}
+/*Navbar*/
+.outer-wrap-header {
+  position: relative;
+  width: 100%;
+  height: 3em;
+  overflow: auto;
+  background-color: lightblue;
+}
+.site-logo-text a {
+  position: absolute;
+  left: 0;
+  margin-left: 2%;
+  text-decoration: none;
+  color: white;
+  font-size: 1.5em;
+}
+.region-header-col-1 {
+  float: left;
+  font-size: 1.6em;
+  background-color: #081290;
+  display: inline;
+  width: 20%;
+  height: 50px;
+}
+.region-header-col-2 {
+  color: white;
+  background-image: linear-gradient(to right, #081290, #020024);
+  display: block;
+  height: 50px;
+  width: 80%;
+  float: left;
+  overflow: hidden;
+}
+.region-header-col-2 a {
+  color: white;
+  font-size: 1.2em;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.5em;
+}
+/*.region-header-col-2 a:hover {
+*    color: @LinkHovCol;
+}
+
+.site-logo {
+    display: none;
+}*/
+.region-flash {
+  position: static;
+  margin-bottom: 1em;
+}
+.region-flash img {
+  max-width: 100%;
+}
+/*Redovisa-page*/
+.inner-wrap-main {
+  overflow: auto;
+}
+.region-main .article {
+  width: 90%;
+  text-align: center;
+  padding-left: 5%;
+  padding-bottom: 20px;
+  float: left;
+}
+.region-main .article p {
+  padding-bottom: 10px;
+}
+.region-main .article.has-sidebar-left,
+.region-main .article .has-sidebar-right {
+  width: 50%;
+}
+.region-sidebar-left {
+  float: left;
+  display: inline-block;
+  width: 30%;
+  margin: auto;
+}
+.region-sidebar-right {
+  float: right;
+  display: inline-block;
+  width: 30%;
+  margin: auto;
+}
+.region-sidebar-left.has-sidebar-right,
+.region-sidebar-right.has-sidebar-left {
+  width: 16%;
+}
+.toc {
+  list-style: none;
+}
+.toc h4 {
+  box-shadow: 0 10px 15px black;
+  box-shadow: 0 -1px 10px #bfbcb9;
+}
+.toc a {
+  color: black;
+  font-size: 20px;
+  padding-right: 5px;
+}
+.region-breadcrumb {
+  font-size: 0.5em;
+  float: right;
+  color: black;
+}
+.next-previous {
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.next {
+  float: right;
+  padding: 10px;
+  background-color: #081290;
+  color: white;
+  border: 1px solid white;
+}
+.next a {
+  color: white;
+}
+.previous {
+  float: left;
+  padding: 10px;
+  background-color: #081290;
+  color: white;
+  border: 1px solid white;
+}
+.previous a {
+  color: white;
+}
+.wrap-sidebar {
+  padding: 5px;
+}
+.wrap-sidebar .block {
+  padding: 10px;
+  margin: 10px;
+}
+.wrap-sidebar .block h4 {
+  background-image: linear-gradient(to right, #081290, #020024);
+  color: white;
+  margin-bottom: 10px;
+}
+/*byline*/
+.author-byline {
+  display: inline-block;
+  border: 1px solid #081290;
+  margin-bottom: 1em;
+  padding: 5px;
+}
+.author-byline img {
+  float: right;
+  width: 80px;
+}
+.author-byline p {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.2em;
+}
+/*Footer*/
+.footer-column {
+  width: 33.3%;
+  float: left;
+  text-align: center;
+  padding-top: 15px;
+  margin-bottom: 10px;
+}
+.footer-column-x {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #400d04;
+  min-height: 8em;
+}
+.footer-column-x a {
+  color: #4751c7;
+}
+.region-footer {
+  padding: 10px;
+  text-align: center;
+  display: block;
+}
+.inner-wrap-footer {
+  background-color: #081290;
+  color: white;
+  min-height: 8em;
+}
+/*Pictures*/
+.figure {
+  display: block;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+.figure.figure figcaption {
+  font-style: italic;
+}
+.figure.figure.right {
+  float: right;
+}
+.row::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+/**
+* Movie database thumbnail
+*/
+img.thumb {
+  max-width: 100px;
+  max-height: 100px;
+}
+.rm-navbar {
+  /* text-align: center; */
+  font-size: 1.5em;
+  line-height: 0;
+}
+.rm-desktop li {
+  position: relative;
+}
+.rm-navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: block;
+}
+.rm-default li {
+  display: inline-block;
+}
+.rm-default a {
+  display: block;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 1em;
+  outline: 0;
+}
+/**
+ * Style for the stylechooser.
+ */
+/**
+ * Variables
+ */
+/**
+ * Style
+ */
+/**
+ * Base style to affect HTML elements on a general scale.
+ */
+/**
+ * Base style to affect HTML elements on a general scale.
+ */
+html {
+  overflow-y: scroll;
+  background-color: #424242;
+}
+body {
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-color: #fff;
+  font: 100.01%/1 serif;
+}
+/**
+ * Layout style for general structure of header, navbar, main, footer
+ * and other regions of the page including route specific styles.
+ */
+/**
+ * Layout style for general structure of header, navbar, main, footer
+ * and other regions of the page including route specific styles.
+ */
+/**
+ * Variables
+ */
+/**
+ * General layout
+ */
+.inner-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+/**
+ * Layout for responsive style through media queries.
+ */
+@media screen and (max-width: 1500px) {
+  .site-logo {
+    display: none;
+  }
+}
+/**
+ * Show off the regions used in the website, to ease styling.
+ */
+.regions .outer-wrap {
+  background-color: #f4e3c9;
+  border: 1px solid #e3b774;
+}
+.regions .inner-wrap {
+  background-color: #f4e0e9;
+  border: 1px solid #d995b4;
+}
+.regions .region-header-col-1,
+.regions .region-header-col-2,
+.regions .region-header-col-3,
+.regions .region-flash,
+.regions .region-breadcrumb,
+.regions .region-flash-message,
+.regions .region-columns-above,
+.regions .region-main,
+.regions .region-after-main,
+.regions .region-columns-below,
+.regions .region-sidebar-left,
+.regions .region-sidebar-right,
+.regions .region-footer,
+.regions .region-footer-column-1,
+.regions .region-footer-column-2,
+.regions .region-footer-column-3 {
+  background-color: #b5dce1;
+  border: 1px solid #6cbac4;
+  color: #111;
+}
+/**
+ * My own settings, not currently in their own module.
+ */
