@@ -38,5 +38,10 @@ return [
             "url" => "dice1",
             "title" => "Spela tärningsspel",
         ],
+        [
+            "text" => "Movie",
+            "url" => "movie",
+            "title" => "Visa Filmer",
+        ],
     ],
 ];

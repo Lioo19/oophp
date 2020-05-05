@@ -65,6 +65,11 @@ return [
             "title" => "Spela tärningsspel",
         ],
         [
+            "text" => "Movie",
+            "url" => "movie",
+            "title" => "Visa Filmer",
+        ],
+        [
             "text" => "Anax dev",
             "url" => "dev",
             "title" => "Anax development utilities",
