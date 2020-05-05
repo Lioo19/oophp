@@ -11,6 +11,7 @@ namespace Anax\View;
 if (!$res) {
     return;
 }
+// var_dump($data);
 
 ?>
 <table>
@@ -24,8 +25,12 @@ if (!$res) {
     $id++; ?>
     <tr>
         <td><?= $row->id ?></td>
-        <td><img class="thumb" src="<?= $row->image ?>"></td>
-        <?php var_dump($row->image); ?>
+        <?php if ($check) : ?>
+            <td><img class="thumb" src="../<?= $row->image ?>"></td>
+        <?php else : ?>
+            <td><img class="thumb" src="./<?= $row->image ?>"></td>
+        <?php endif; ?>
+        <!-- <?php var_dump($row->image); ?> -->
         <td><?= $row->title ?></td>
         <td><?= $row->year ?></td>
     </tr>

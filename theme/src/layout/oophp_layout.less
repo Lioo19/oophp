@@ -104,12 +104,17 @@ a.rm-button .rm-button-face-1 {
      background-image: linear-gradient(to right, @colorDropDown, @colorDropDown);
  }
 
+ .rm-navbar {
+     text-align: center;
+ }
+
  /* Page Layout*/
 
  .region-main {
      #desinax-vgrid.column(@columns * 3 / 4);
      #desinax-vgrid.push(3);
      margin-bottom: (@magicNumber / 2);
+     min-height: 600px;
 
      p {
          //padding-bottom: 10px;
@@ -258,6 +263,9 @@ a.rm-button .rm-button-face-1 {
      color: @LinkCol;
  }
 
+.site-footer {
+    text-align: center;
+}
 
 
  /*Pictures*/
@@ -327,7 +335,7 @@ a.moviebutton {
 
 th {
     font-size: 1.2em;
-    padding-right: 1em;
+    padding: 0.8em;
     border-bottom: 1px solid @LinkHovCol;
 }
 

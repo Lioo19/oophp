@@ -15,6 +15,8 @@ use Anax\Commons\AppInjectableTrait;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ *
  */
 class MovieController implements AppInjectableInterface
 {
@@ -49,6 +51,7 @@ class MovieController implements AppInjectableInterface
 
         $data = [
             "res" => $res,
+            "check" => null
         ];
 
         $page->add("movie/header");
@@ -99,6 +102,7 @@ class MovieController implements AppInjectableInterface
 
         $data = [
             "title" => $title,
+            "check" => "check",
             "year1" => $year1,
             "year2" => $year2,
             "res"   => $res
@@ -129,7 +133,7 @@ class MovieController implements AppInjectableInterface
         $searchTitle = $request->getGet("searchTitle");
 
         $res = null;
-        if($searchTitle) {
+        if ($searchTitle) {
             $sql = "SELECT * FROM movie WHERE title LIKE ?;";
             $res = $db->executeFetchAll($sql, [$searchTitle]);
         } else {
@@ -140,6 +144,7 @@ class MovieController implements AppInjectableInterface
 
         $data = [
             "title"         => $title,
+            "check"         => "check",
             "searchTitle"   => $searchTitle,
             "res"           => $res
         ];

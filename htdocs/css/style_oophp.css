@@ -818,6 +818,9 @@ a.rm-button .rm-button-face-1 {
 .rm-desktop ul {
   background-image: linear-gradient(to right, #404040, #404040);
 }
+.rm-navbar {
+  text-align: center;
+}
 /* Page Layout*/
 .region-main {
   display: inline;
@@ -827,6 +830,7 @@ a.rm-button .rm-button-face-1 {
   margin-right: 0.52083333%;
   margin-left: 13.02083333%;
   margin-bottom: 12px;
+  min-height: 600px;
 }
 .region-main.has-sidebar {
   display: inline;
@@ -1006,6 +1010,9 @@ a.rm-button .rm-button-face-1 {
   background-color: #404040;
   color: #f5f5f5;
 }
+.site-footer {
+  text-align: center;
+}
 /*Pictures*/
 .figure {
   font-size: 12px;
@@ -1059,7 +1066,7 @@ a.moviebutton {
 }
 th {
   font-size: 1.2em;
-  padding-right: 1em;
+  padding: 0.8em;
   border-bottom: 1px solid #b5b5b5;
 }
 td {
