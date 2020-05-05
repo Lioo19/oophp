@@ -203,7 +203,7 @@ class MovieController implements AppInjectableInterface
             $this->deleteActionPost($id);
             return $response->redirect("movie/select");
         } elseif ($add) {
-            $this->addMovieAction();
+            $this->addActionPost();
             //fetching last inserted ID
             $id = $db->lastInsertId();
             return $response->redirect("movie/edit?id=$id");
@@ -223,6 +223,7 @@ class MovieController implements AppInjectableInterface
     {
         $db = $this->app->db;
         $response = $this->app->response;
+        $this->connection();
 
         $deleteSql = "DELETE FROM movie WHERE id = ?;";
         //vill man få en return med alla här? kanske är nice?
@@ -242,13 +243,14 @@ class MovieController implements AppInjectableInterface
         $db = $this->app->db;
         $response = $this->app->response;
         $request = $this->app->request;
+        $this->connection();
 
         $title = $request->getPost("title", "Titel");
         $year = $request->getPost("year", 9999);
         $image = $request->getPost("image", "img/default.jpg");
 
         $addSql = "INSERT INTO movie (title, year, image) VALUES (?, ?, ?);";
-        $db->execute($deleteSql, [$title, $year, $image]);
+        $db->execute($addSql, [$title, $year, $image]);
 
         return $response->redirect("movie/select");
     }
@@ -263,13 +265,15 @@ class MovieController implements AppInjectableInterface
         $db = $this->app->db;
         $response = $this->app->response;
         $request = $this->app->request;
+        $this->connection();
 
         $id = $request->getPost("id") ?: $request->getGet("id");
+        var_dump($id);
         $title = $request->getPost("title", "Titel");
         $year = $request->getPost("year", 9999);
         $image = $request->getPost("image", "img/default.jpg");
 
-        $editSql = "UPDATE  movie SET title = ?, year = ?, image = ? WHERE id = ?;";
+        $editSql = "UPDATE movie SET title = ?, year = ?, image = ? WHERE id = ?;";
         $db->execute($editSql, [$title, $year, $image, $id]);
 
         return $response->redirect("movie/select");
@@ -294,7 +298,7 @@ class MovieController implements AppInjectableInterface
         $sql = "SELECT * FROM movie WHERE id = ?;";
         $chosenMovie = $db->executeFetchAll($sql, [$id]);
         var_dump($chosenMovie);
-        // $chosenMovie = $chosenMovie[0];
+        $chosenMovie = $chosenMovie[0];
 
         $data = [
           "movie" => $chosenMovie ?? null,
