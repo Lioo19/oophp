@@ -8,16 +8,7 @@ namespace Anax\View;
     <fieldset>
     <legend>Ändra</legend>
     <input type="hidden" name="id" value="<?= $movie->id ?>"/>
-
-    <p>
-        <label>Id<br>
-        <select name="id">
-            <?php foreach ($movies as $movie) : ?>
-            <option value="<?= $movie->id ?>"><?= $movie->id ?>: <?= $movie->title ?></option>
-            <?php endforeach; ?>
-        </select>
-    </label>
-    </p>
+    <?php var_dump($movie) ?>
 
     <p>
         <label>Title:<br>
@@ -38,7 +29,6 @@ namespace Anax\View;
 
     <p>
         <input type="submit" name="save" value="Save">
-        <input type="reset" value="Reset">
     </p>
     <p>
         <a href="<?= url("movie/select") ?>">Välj Film</a> |

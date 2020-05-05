@@ -156,20 +156,23 @@ class MovieController implements AppInjectableInterface
      *
      * @return object
      */
-    public function selectMovieAction() : object
+    public function selectAction() : object
     {
         $title = "Select Movie | oophp";
         $session = $this->app->session;
         $page = $this->app->page;
         $db = $this->app->db;
 
-        $sql = "SELECT id, title FROM movie";
-        $allMovies = $db->executeFetchAll($sql);
+        $this->connection();
+        $sql = "SELECT id, title FROM movie;";
+        $movies = $db->executeFetchAll($sql);
+
+        $data = [
+            "movies" => $movies ?? null
+        ];
 
         $page->add("movie/header");
-        $page->add("movie/select", [
-            "allMovies" => $allMovies ?? null
-        ]);
+        $page->add("movie/select", $data);
 
         return $page->render([
             "title" => $title
@@ -181,11 +184,10 @@ class MovieController implements AppInjectableInterface
      *
      * @return void
      */
-    public function selectMovieActionPost() : object
+    public function selectActionPost() : object
     {
         $request = $this->app->request;
         $response = $this->app->response;
-        $session = $this->app->session;
         $db = $this->app->db;
 
         $id = $request->getPost("id", null);
@@ -199,13 +201,14 @@ class MovieController implements AppInjectableInterface
 
         if ($delete && is_numeric($id)) {
             $this->deleteActionPost($id);
-            return $response->redirect("movie/index");
+            return $response->redirect("movie/select");
         } elseif ($add) {
-            //Id??
             $this->addMovieAction();
-            return $response->redirect("movie/movie-add");
+            //fetching last inserted ID
+            $id = $db->lastInsertId();
+            return $response->redirect("movie/edit?id=$id");
         } elseif ($edit && is_numeric($id)) {
-            return $response->redirect("movie/movie-edit?id=$id");
+            return $response->redirect("movie/edit?id=$id");
         }
     }
 
@@ -261,13 +264,13 @@ class MovieController implements AppInjectableInterface
         $response = $this->app->response;
         $request = $this->app->request;
 
-        $id = $request->getPost("id");
+        $id = $request->getPost("id") ?: $request->getGet("id");
         $title = $request->getPost("title", "Titel");
         $year = $request->getPost("year", 9999);
         $image = $request->getPost("image", "img/default.jpg");
 
-        $addSql = "INSERT INTO movie (title, year, image) VALUES (?, ?, ?);";
-        $db->execute($deleteSql, [$title, $year, $image]);
+        $editSql = "UPDATE  movie SET title = ?, year = ?, image = ? WHERE id = ?;";
+        $db->execute($editSql, [$title, $year, $image, $id]);
 
         return $response->redirect("movie/select");
     }
@@ -298,7 +301,7 @@ class MovieController implements AppInjectableInterface
         ];
 
         $page->add("movie/header");
-        $page->add("movie/movie-edit", $data);
+        $page->add("movie/edit", $data);
 
         return $page->render([
           "title" => $title
