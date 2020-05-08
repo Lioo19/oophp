@@ -74,5 +74,10 @@ return [
             "url" => "dev",
             "title" => "Anax development utilities",
         ],
+        [
+            "text" => "Text test",
+            "url" => "textfilter",
+            "title" => "My Text Filter Test",
+        ],
     ],
 ];

@@ -40,6 +40,16 @@ return [
                         "url" => "redovisning/kmom04",
                         "title" => "Redovisning för kmom04.",
                     ],
+                    [
+                        "text" => "Kmom05",
+                        "url" => "redovisning/kmom05",
+                        "title" => "Redovisning för kmom05.",
+                    ],
+                    [
+                        "text" => "Kmom06",
+                        "url" => "redovisning/kmom06",
+                        "title" => "Redovisning för kmom06.",
+                    ],
                 ],
             ],
         ],
@@ -82,6 +92,11 @@ return [
             "text" => "Anax dev",
             "url" => "dev",
             "title" => "Anax development utilities",
+        ],
+        [
+            "text" => "Text test",
+            "url" => "textfilter",
+            "title" => "My Text Filter Test",
         ],
     ],
 ];

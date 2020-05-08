@@ -23,11 +23,11 @@ return [
             "url" => "om",
             "title" => "Om denna webbplats.",
         ],
-        [
-            "text" => "Styleväljare",
-            "url" => "style",
-            "title" => "Välj stylesheet.",
-        ],
+        // [
+        //     "text" => "Styleväljare",
+        //     "url" => "style",
+        //     "title" => "Välj stylesheet.",
+        // ],
         [
             "text" => "Verktyg",
             "url" => "verktyg",
@@ -42,6 +42,11 @@ return [
             "text" => "Movie",
             "url" => "movie",
             "title" => "Visa Filmer",
+        ],
+        [
+            "text" => "Text test",
+            "url" => "textfilter",
+            "title" => "My Text Filter Test",
         ],
     ],
 ];
