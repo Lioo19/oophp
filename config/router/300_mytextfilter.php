@@ -6,7 +6,7 @@ return [
     "routes" => [
         [
             "info" => "MyTextFilterController",
-            "mount" => "MyTextFilter",
+            "mount" => "mytextfilter",
             "handler" => "\Lioo19\MyTextFilter\MyTextFilterController",
         ],
     ]

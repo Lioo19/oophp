@@ -31,6 +31,26 @@ return [
                         "url" => "redovisning/kmom02",
                         "title" => "Redovisning för kmom02.",
                     ],
+                    [
+                        "text" => "Kmom03",
+                        "url" => "redovisning/kmom03",
+                        "title" => "Redovisning för kmom03.",
+                    ],
+                    [
+                        "text" => "Kmom04",
+                        "url" => "redovisning/kmom04",
+                        "title" => "Redovisning för kmom04.",
+                    ],
+                    [
+                        "text" => "Kmom05",
+                        "url" => "redovisning/kmom05",
+                        "title" => "Redovisning för kmom05.",
+                    ],
+                    [
+                        "text" => "Kmom06",
+                        "url" => "redovisning/kmom06",
+                        "title" => "Redovisning för kmom06.",
+                    ],
                 ],
             ],
         ],
@@ -76,8 +96,32 @@ return [
         ],
         [
             "text" => "Text test",
-            "url" => "textfilter",
+            "url" => "mytextfilter",
             "title" => "My Text Filter Test",
+            "submenu" => [
+                "items" => [
+                    [
+                        "text" => "BBCode",
+                        "url" => "mytextfilter/bbcode",
+                        "title" => "Test BBCode",
+                    ],
+                    [
+                        "text" => "Clickable",
+                        "url" => "mytextfilter/clickable",
+                        "title" => "Test Clickable Links",
+                    ],
+                    [
+                        "text" => "Markdown",
+                        "url" => "mytextfilter/markdown",
+                        "title" => "test Markdown",
+                    ],
+                ],
+            ],
+        ],
+        [
+            "text" => "blogg",
+            "url" => "content",
+            "title" => "blog-verktyg",
         ],
     ],
 ];

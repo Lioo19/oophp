@@ -6,6 +6,10 @@ use \Michelf\Markdown;
 
 /**
  * Filter and format text content.
+ *
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ *
  */
 class MyTextFilter
 {
@@ -27,6 +31,9 @@ class MyTextFilter
     /**
      * Call each filter specified in the param
      * on the text and return the processed text.
+     * use the filters variable to go through all filters
+     *
+     * POSSIBLY ADD CHECK IF FILTER IS IN FILTERS AT ALL?
      *
      * @param string $text   The text to filter.
      * @param array  $filter Array of filters to be used.
@@ -35,6 +42,16 @@ class MyTextFilter
      */
     public function parse($text, $filter)
     {
+        $newText = null;
+        foreach ($this->filters as $k => $v) {
+            if (in_array($k, $filter)) {
+                $newText = $this->$v($text);
+            }
+        }
+        if ($newText === null) {
+            $newText = $text;
+        }
+        return $newText;
     }
 
 
@@ -115,7 +132,7 @@ class MyTextFilter
      */
     public function nl2br($text)
     {
-        return nl12br($text);
+        return nl2br($text);
     }
 
     /**

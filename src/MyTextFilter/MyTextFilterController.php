@@ -41,7 +41,7 @@ class MytextFilterController implements AppInjectableInterface
      */
     public function indexAction()
     {
-        $title = "Testpage for textfilters | oophp";
+        $title = "Test för textfilters ";
         $page = $this->app->page;
         $db = $this->app->db;
 
@@ -50,12 +50,12 @@ class MytextFilterController implements AppInjectableInterface
         // $res = $db->executeFetchAll($sql);
 
         $data = [
-            "res" => $res,
+            "res" => "hej",
             "check" => null
         ];
 
-        $page->add("movie/header");
-        $page->add("movie/index", $data);
+        $page->add("mytextfilter/header");
+        $page->add("mytextfilter/index", $data);
 
         return $page->render([
             "title" => $title,
@@ -63,54 +63,29 @@ class MytextFilterController implements AppInjectableInterface
     }
 
     /**
-     * Searching for movies by year-interval
+     * BBCode test
      *
      * @return object
      */
-    public function searchYearAction() : object
+    public function bbcodeAction() : object
     {
-        $title = "Sök på årtal| oophp";
-        $request = $this->app->request;
-        $response = $this->app->response;
+        $title = "BBCode test";
         $page = $this->app->page;
-        $db = $this->app->db;
 
-        $this->connection();
+        $bbcode = new MyTextFilter();
 
-        $sql = "SELECT * FROM movie;";
-        $year1 = $request->getGet("year1");
-        $year2 = $request->getGet("year2");
-        $params = null;
+        $text = file_get_contents(__DIR__ . "../../../htdocs/textsforfilter/bbcode.txt");
 
-        if ($year1 && $year2) {
-            $sql = "SELECT * FROM movie WHERE year >= ? AND year <= ?;";
-            $params = [$year1, $year2];
-        } elseif ($year1) {
-            $sql = "SELECT * FROM movie WHERE year >= ?;";
-            $params = [$year1];
-        } elseif ($year2) {
-            $sql = "SELECT * FROM movie WHERE year <= ?;";
-            $params = [$year2];
-        }
-
-        $res = null;
-        if ($params) {
-            $res = $db->executeFetchAll($sql, $params);
-        } else {
-            $res = $db->executeFetchAll($sql);
-        }
+        $html = $bbcode->parse($text, ["bbcode", "nl2br"]);
 
         $data = [
             "title" => $title,
-            "check" => "check",
-            "year1" => $year1,
-            "year2" => $year2,
-            "res"   => $res
+            "text"  => $text,
+            "html"  => $html,
         ];
 
-        $page->add("movie/header", $data);
-        $page->add("movie/search-year", $data);
-        $page->add("movie/index", $data);
+        $page->add("mytextfilter/header", $data);
+        $page->add("mytextfilter/bbcode", $data);
 
         return $page->render([
             "title" => $title,
@@ -118,202 +93,92 @@ class MytextFilterController implements AppInjectableInterface
     }
 
     /**
-     * Get for startplay, renders the page and deletes session-scores
+     * Clickable links, using filter makeClickable (clickable) in MyTextFilter
      *
      * @return object
      */
-    public function searchTitleAction() : object
+    public function clickableAction() : object
     {
-        $title = "Sök på titel | oophp";
-        $db = $this->app->db;
+        $title = "Clickable link test";
         $page = $this->app->page;
-        $request = $this->app->request;
 
-        $this->connection();
-        $searchTitle = $request->getGet("searchTitle");
+        $clickable = new MyTextFilter();
 
-        $res = null;
-        if ($searchTitle) {
-            $sql = "SELECT * FROM movie WHERE title LIKE ?;";
-            $res = $db->executeFetchAll($sql, [$searchTitle]);
-        } else {
-            //set to show all movies if search not done
-            $sql = "SELECT * FROM movie;";
-            $res = $db->executeFetchAll($sql);
-        }
+        $text = file_get_contents(__DIR__ . "../../../htdocs/textsforfilter/clickable.txt");
+
+        $html = $clickable->parse($text, ["link"]);
 
         $data = [
-            "title"         => $title,
-            "check"         => "check",
-            "searchTitle"   => $searchTitle,
-            "res"           => $res
+            "title" => $title,
+            "text"  => $text,
+            "html"  => $html,
         ];
 
-        $page->add("movie/header", $data);
-        $page->add("movie/search-title", $data);
-        $page->add("movie/index", $data);
-
-        return $page->render($data);
-    }
-
-    /**
-     * Selection of single movie, with links for CRUD
-     *
-     * @return object
-     */
-    public function selectAction() : object
-    {
-        $title = "Select Movie | oophp";
-        $session = $this->app->session;
-        $page = $this->app->page;
-        $db = $this->app->db;
-
-        $this->connection();
-        $sql = "SELECT id, title FROM movie;";
-        $movies = $db->executeFetchAll($sql);
-
-        $data = [
-            "movies" => $movies ?? null
-        ];
-
-        $page->add("movie/header");
-        $page->add("movie/select", $data);
+        $page->add("mytextfilter/header", $data);
+        $page->add("mytextfilter/clickable", $data);
 
         return $page->render([
-            "title" => $title
+            "title" => $title,
         ]);
     }
 
     /**
-     * POST movie selection, redirecting to CRUD
-     *
-     * @return void
-     */
-    public function selectActionPost() : object
-    {
-        $request = $this->app->request;
-        $response = $this->app->response;
-        $db = $this->app->db;
-
-        $id = $request->getPost("id", null);
-        $edit = $request->getPost("edit", null);
-        $delete = $request->getPost("delete", null);
-        $add = $request->getPost("add", null);
-
-        if ((!$id && $edit) || (!$id && $delete)) {
-            return $response->redirect("movie/select");
-        }
-
-        if ($delete && is_numeric($id)) {
-            $this->deleteActionPost($id);
-            return $response->redirect("movie/select");
-        } elseif ($add) {
-            $this->addActionPost();
-            //fetching last inserted ID
-            $id = $db->lastInsertId();
-            return $response->redirect("movie/edit?id=$id");
-        } elseif ($edit && is_numeric($id)) {
-            return $response->redirect("movie/edit?id=$id");
-        }
-    }
-
-    /**
-     * Post action to delete movie
-     * Doesnt need a landningpage, just removie?
-     *DONE?
+     * Markdown
      *
      * @return object
      */
-    public function deleteActionPost($id) : object
+    public function markdownAction() : object
     {
-        $db = $this->app->db;
-        $response = $this->app->response;
-        $this->connection();
-
-        $deleteSql = "DELETE FROM movie WHERE id = ?;";
-        //vill man få en return med alla här? kanske är nice?
-        $db->execute($deleteSql, [$id]);
-
-        return $response->redirect("movie/select");
-    }
-
-    /**
-     * Post action to add movie
-     * DONE?
-     *
-     * @return object
-     */
-    public function addActionPost() : object
-    {
-        $db = $this->app->db;
-        $response = $this->app->response;
-        $request = $this->app->request;
-        $this->connection();
-
-        $title = $request->getPost("title", "Titel");
-        $year = $request->getPost("year", 9999);
-        $image = $request->getPost("image", "img/default.jpg");
-
-        $addSql = "INSERT INTO movie (title, year, image) VALUES (?, ?, ?);";
-        $db->execute($addSql, [$title, $year, $image]);
-
-        return $response->redirect("movie/select");
-    }
-
-    /**
-     * Post action to edit movie
-     *
-     * @return object
-     */
-    public function editActionPost() : object
-    {
-        $db = $this->app->db;
-        $response = $this->app->response;
-        $request = $this->app->request;
-        $this->connection();
-
-        $id = $request->getPost("id") ?: $request->getGet("id");
-        // var_dump($id);
-        $title = $request->getPost("title", "Titel");
-        $year = $request->getPost("year", 9999);
-        $image = $request->getPost("image", "img/default.jpg");
-
-        $editSql = "UPDATE movie SET title = ?, year = ?, image = ? WHERE id = ?;";
-        $db->execute($editSql, [$title, $year, $image, $id]);
-
-        return $response->redirect("movie/select");
-    }
-
-    /**
-     * Get action to edit movie
-     *
-     * @return object
-     */
-    public function editAction() : object
-    {
-        $title = " Edit movie | oophp";
-        $db = $this->app->db;
+        $title = "Markdown test | oophp";
         $page = $this->app->page;
-        $request = $this->app->request;
 
-        $this->connection();
+        $markdown = new MyTextFilter();
 
-        $id = $request->getGet("id");
+        $text = file_get_contents(__DIR__ . "../../../htdocs/textsforfilter/markdown.md");
 
-        $sql = "SELECT * FROM movie WHERE id = ?;";
-        $chosenMovie = $db->executeFetchAll($sql, [$id]);
-        // var_dump($chosenMovie);
-        $chosenMovie = $chosenMovie[0];
+        $html = $markdown->parse($text, ["markdown"]);
 
         $data = [
-          "movie" => $chosenMovie ?? null,
+            "title" => $title,
+            "text"  => $text,
+            "html"  => $html,
         ];
 
-        $page->add("movie/header");
-        $page->add("movie/edit", $data);
+        $page->add("mytextfilter/header", $data);
+        $page->add("mytextfilter/markdown", $data);
 
         return $page->render([
-          "title" => $title
+            "title" => $title,
         ]);
     }
+    // 
+    // /**
+    //  * Strip
+    //  *
+    //  * @return object
+    //  */
+    // public function markdownAction() : object
+    // {
+    //     $title = "Strip test | oophp";
+    //     $page = $this->app->page;
+    //
+    //     $markdown = new MyTextFilter();
+    //
+    //     $text = file_get_contents(__DIR__ . "../../../htdocs/textsforfilter/markdown.md");
+    //
+    //     $html = $markdown->parse($text, ["strip_tags"]);
+    //
+    //     $data = [
+    //         "title" => $title,
+    //         "text"  => $text,
+    //         "html"  => $html,
+    //     ];
+    //
+    //     $page->add("mytextfilter/header", $data);
+    //     $page->add("mytextfilter/markdown", $data);
+    //
+    //     return $page->render([
+    //         "title" => $title,
+    //     ]);
+    // }
 }

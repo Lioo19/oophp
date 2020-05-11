@@ -95,8 +95,32 @@ return [
         ],
         [
             "text" => "Text test",
-            "url" => "textfilter",
+            "url" => "mytextfilter",
             "title" => "My Text Filter Test",
+            "submenu" => [
+                "items" => [
+                    [
+                        "text" => "BBCode",
+                        "url" => "mytextfilter/bbcode",
+                        "title" => "Test BBCode",
+                    ],
+                    [
+                        "text" => "Clickable",
+                        "url" => "mytextfilter/clickable",
+                        "title" => "Test Clickable Links",
+                    ],
+                    [
+                        "text" => "Markdown",
+                        "url" => "mytextfilter/markdown",
+                        "title" => "test Markdown",
+                    ],
+                ],
+            ],
+        ],
+        [
+            "text" => "blogg",
+            "url" => "content",
+            "title" => "blog-verktyg",
         ],
     ],
 ];

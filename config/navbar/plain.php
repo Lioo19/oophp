@@ -45,8 +45,13 @@ return [
         ],
         [
             "text" => "Text test",
-            "url" => "textfilter",
+            "url" => "mytextfilter",
             "title" => "My Text Filter Test",
+        ],
+        [
+            "text" => "blogg",
+            "url" => "content",
+            "title" => "blog-verktyg",
         ],
     ],
 ];
