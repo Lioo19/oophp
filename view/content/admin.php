@@ -26,13 +26,16 @@ if (!$res) {
         <td><?= $row->updated ?></td>
         <td><?= $row->deleted ?></td>
         <td>
-            <a class="icons" href="?route=edit&amp;id=<?= $row->id ?>" title="Edit this content">
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            <a class="icons" href="edit?id=<?= esc($row->id) ?>" title="Edit this content">
+                <i class="fa fa-pencil-square-o" aria-hidden="true">Edit</i>
             </a>
-            <a class="icons" href="?route=delete&amp;id=<?= $row->id ?>" title="Edit this content">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            <a class="icons" href="edit?id=<?= $row->id ?>" title="Edit this content">
+                <i class="fa fa-trash-o" aria-hidden="true">Delete</i>
             </a>
         </td>
     </tr>
 <?php endforeach; ?>
 </table>
+<div>
+    <input type="submit" class="button" name="create" value="Nytt inlägg">
+</div>
