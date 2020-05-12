@@ -41,7 +41,6 @@ class MyTextFilter
      */
     public function parse($text, $filter)
     {
-        print_r($filter);
         foreach ($this->filters as $k => $v) {
             if (in_array($k, $filter)) {
                 $text = $this->$v($text);

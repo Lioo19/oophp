@@ -388,7 +388,7 @@ class ContentController implements AppInjectableInterface
 
 
     /**
-     * Get for admin-view
+     * Get for pages-view
      *
      * @return object
      */
@@ -400,8 +400,19 @@ class ContentController implements AppInjectableInterface
         $request = $this->app->request;
 
         $this->connection();
-        $sql = "SELECT * FROM content;";
-        $res = $db->executeFetchAll($sql);
+        $sql = <<<EOD
+SELECT
+    *,
+    CASE
+        WHEN (deleted <= NOW()) THEN "isDeleted"
+        WHEN (published <= NOW()) THEN "isPublished"
+        ELSE "notPublished"
+    END AS status
+FROM content
+WHERE type=?
+;
+EOD;
+        $res = $db->executeFetchAll($sql, ["page"]);
 
         $data = [
             "title"         => $title,
@@ -412,5 +423,47 @@ class ContentController implements AppInjectableInterface
         $page->add("content/pages", $data);
 
         return $page->render($data);
+    }
+
+    /**
+     * Showing the page-view
+     *
+     * @return object
+     */
+    public function pageAction() : object
+    {
+        $request = $this->app->request;
+        $page = $this->app->page;
+        $db = $this->app->db;
+        $title = $request->getGet("slug", null);
+
+        $this->connection();
+
+        if ($title) {
+            $sql = "SELECT * FROM content WHERE slug = ?;";
+            $content = $db->executeFetchAll($sql, [$title]);
+        } else {
+            $sql = "SELECT * FROM content WHERE id = 1;";
+            $content = $db->executeFetchAll($sql);
+        }
+
+        $content = $content[0];
+
+        $filters = $content->filter;
+        $data = $content->data;
+
+        $supportObject = $this->createSupport();
+        $content->data = $supportObject->textFilter($data, $filters);
+
+        $data = [
+            "content"   => $content
+        ];
+
+        $page->add("content/header");
+        $page->add("content/blogpost", $data);
+
+        return $page->render([
+            "title" => $title,
+        ]);
     }
 }
