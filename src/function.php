@@ -125,3 +125,15 @@ function slugify($str)
     $str = trim(preg_replace('/-+/', '-', $str), '-');
     return $str;
 }
+
+/**
+* method for activating textfilters
+*/
+function textFilter($content, $chosenFilters)
+{
+    $textf = new \Lioo19\MyTextFilter\MyTextFilter();
+
+    $textRes = $textf->parse($content, $chosenFilters);
+
+    return $textRes;
+}

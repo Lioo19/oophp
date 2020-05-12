@@ -4,13 +4,14 @@ namespace Lioo19\Content;
 
 use Anax\Commons\AppInjectableInterface;
 use Anax\Commons\AppInjectableTrait;
+use Lioo19\Content\Support;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
 // use Anax\Route\Exception\InternalErrorException;
 
 /**
- * A  controller for the content page
+ * A  controller for the the post routes of the content page
  *
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -23,13 +24,6 @@ class ContentController implements AppInjectableInterface
     use AppInjectableTrait;
 
     /**
-    * @var $support keeping the support class
-    *
-    */
-    private $support;
-
-
-    /**
      * This is the action for connecting to the database
      *
      * @return void
@@ -37,17 +31,6 @@ class ContentController implements AppInjectableInterface
     public function connection()
     {
         $this->app->db->connect();
-    }
-
-    /**
-     * Creating a support object and returning it
-     *
-     * @return void
-     */
-    public function createSupport()
-    {
-        $support = new \Lioo19\Content\Support();
-        return $support;
     }
 
     /**
@@ -80,6 +63,29 @@ class ContentController implements AppInjectableInterface
         ]);
     }
 
+    // /**
+    //  * RESET, NOT IN ACTION YET
+    //  *
+    //  * @return object
+    //  */
+    // public function resetAction() : object
+    // {
+    //     $title = "Resetting database";
+    //
+    //     $page = $this->app->page;
+    //
+    //     $data = [
+    //         "title" => $title,
+    //     ];
+    //
+    //     $page->add("content/header", $data);
+    //     $page->add("content/reset", $data);
+    //
+    //     return $page->render([
+    //         "title" => $title,
+    //     ]);
+    // }
+
     /**
      * Showing the blog-view
      * Fungerar men inte så fin
@@ -99,14 +105,6 @@ class ContentController implements AppInjectableInterface
         $sql = "SELECT * FROM content;";
 
         $res = $db->executeFetchAll($sql);
-
-        foreach ($res as $key => $value) {
-            $filters = $value->filter;
-            $data = $value->data;
-
-            $supportObject = $this->createSupport();
-            $value->data = $supportObject->textFilter($data, $filters);
-        }
 
         $data = [
             "title" => $title,
@@ -163,13 +161,8 @@ class ContentController implements AppInjectableInterface
             $content = $db->executeFetchAll($sql);
         }
 
+        // print_r($content[0]);
         $content = $content[0];
-
-        $filters = $content->filter;
-        $data = $content->data;
-
-        $supportObject = $this->createSupport();
-        $content->data = $supportObject->textFilter($data, $filters);
 
         $data = [
             "content"   => $content
@@ -253,6 +246,7 @@ class ContentController implements AppInjectableInterface
         $this->connection();
 
         $contentId = $request->getPost("contentId") ?: $request->getGet("id");
+        var_dump($contentId);
 
         $contentTitle = $request->getPost("contentTitle", null);
         $contentPath = $request->getPost("contentPath", null);
@@ -263,25 +257,19 @@ class ContentController implements AppInjectableInterface
         $contentPublish = $request->getPost("contentPublish", null);
         $contentId = $request->getPost("contentId", null);
 
-        $supportObject = $this->createSupport();
+        if (!$params["contentSlug"]) {
+            $params["contentSlug"] = slugify($params["contentTitle"]);
+        }
 
-        if (!$contentSlug) {
-            $contentSlug = $supportObject->slugify($contentTitle);
+        if (!$params["contentPath"]) {
+            $params["contentPath"] = null;
         }
 
         if ($contentSlug) {
-            $sqlSlug = "SELECT slug, id FROM content WHERE slug = ?;";
-            $res = $db->executeFetch($sqlSlug, [$contentSlug]);
-            if ($res) {
+            $sqlSlug = "SELECT slug, id FROM content WHERE slug = ? AND id = ?;";
+            $res = $db->executeFetch($sqlSlug, [$contentSlug, $contentId]);
+            if (!$res) {
                 $contentSlug = $contentSlug . $contentId;
-            }
-        }
-
-        if ($contentPath) {
-            $sqlPath = "SELECT path, id FROM content WHERE path = ?;";
-            $resPath = $db->executeFetch($sqlPath, [$contentPath]);
-            if ($resPath) {
-                $contentPath = $contentPath . $contentId;
             }
         }
 

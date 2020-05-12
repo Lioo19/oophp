@@ -33,7 +33,6 @@ class MyTextFilter
      * on the text and return the processed text.
      * use the filters variable to go through all filters
      *
-     * POSSIBLY ADD CHECK IF FILTER IS IN FILTERS AT ALL?
      *
      * @param string $text   The text to filter.
      * @param array  $filter Array of filters to be used.
@@ -42,16 +41,13 @@ class MyTextFilter
      */
     public function parse($text, $filter)
     {
-        $newText = null;
+        print_r($filter);
         foreach ($this->filters as $k => $v) {
             if (in_array($k, $filter)) {
-                $newText = $this->$v($text);
+                $text = $this->$v($text);
             }
         }
-        if ($newText === null) {
-            $newText = $text;
-        }
-        return $newText;
+        return $text;
     }
 
 
