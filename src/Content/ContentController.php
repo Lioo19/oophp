@@ -209,24 +209,65 @@ class ContentController implements AppInjectableInterface
      */
     public function editAction() : object
     {
-        $title = "ADMIN";
+        $title = "Edit";
         $db = $this->app->db;
         $page = $this->app->page;
         $request = $this->app->request;
+        $id = $request->getGet("id", null);
 
         $this->connection();
-        $sql = "SELECT * FROM content;";
-        $res = $db->executeFetchAll($sql);
+        $sql = "SELECT * FROM content WHERE id = ?;";
+        $content = $db->executeFetchAll($sql, [$id]);
+        $content = $content[0];
 
         $data = [
             "title"         => $title,
-            "res"           => $res
+            "content"       => $content
         ];
 
         $page->add("content/header", $data);
         $page->add("content/edit", $data);
 
         return $page->render($data);
+    }
+
+    /**
+     * POST for edit-option, edits in database
+     * FUNKAR MEN INGEN RESPONS PÅ ATT INLÄGGET SPARAS
+     *
+     * @return object
+     */
+    public function editActionPost() : object
+    {
+        $db = $this->app->db;
+        $response = $this->app->response;
+        $request = $this->app->request;
+        $this->connection();
+
+        $contentId = $request->getPost("contentId") ?: $request->getGet("id");
+        var_dump($contentId);
+
+        $contentTitle = $request->getPost("contentTitle", null);
+        $contentPath = $request->getPost("contentPath", null);
+        $contentSlug = $request->getPost("contentSlug", null);
+        $contentData = $request->getPost("contentData", null);
+        $contentType = $request->getPost("contentType", null);
+        $contentFilter = $request->getPost("contentFilter", null);
+        $contentPublish = $request->getPost("contentPublish", null);
+        $contentId = $request->getPost("contentId", null);
+
+        if (!$params["contentSlug"]) {
+            $params["contentSlug"] = slugify($params["contentTitle"]);
+        }
+
+        if (!$params["contentPath"]) {
+            $params["contentPath"] = null;
+        }
+
+        $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
+        $db->execute($sql, [$contentTitle, $contentPath, $contentSlug, $contentData, $contentType, $contentFilter, $contentPublish, $contentId]);
+
+        return $response->redirect("content/admin");
     }
 
     /**
@@ -248,6 +289,82 @@ class ContentController implements AppInjectableInterface
             "title" => $title
         ]);
     }
+
+    /**
+     * Post action to create post
+     *
+     * @return object
+     */
+    public function createActionPost() : object
+    {
+        $db = $this->app->db;
+        $response = $this->app->response;
+        $request = $this->app->request;
+        $this->connection();
+
+        $contentTitle = $request->getPost("contentTitle") ?: $request->getGet("title");
+
+        $addSql = "INSERT INTO content (title) VALUES (?);";
+        $db->execute($addSql, [$contentTitle]);
+
+        $idSql = "SELECT id FROM content WHERE title = ?;";
+        $contentId = $db->executeFetchAll($idSql, [$contentTitle]);
+        $contentId = json_encode($contentId[0]);
+        $contentId = substr($contentId, 6, -1);
+        var_dump($contentId);
+
+        return $response->redirect("content/edit?id=$contentId");
+    }
+
+    /**
+     * Get for delete
+     *
+     * @return object
+     */
+    public function deleteAction() : object
+    {
+        $title = "delete";
+        $db = $this->app->db;
+        $page = $this->app->page;
+        $request = $this->app->request;
+        $id = $request->getGet("id", null);
+
+        $this->connection();
+        $sql = "SELECT * FROM content WHERE id = ?;";
+        $content = $db->executeFetchAll($sql, [$id]);
+        $content = $content[0];
+
+        $data = [
+            "title"         => $title,
+            "content"       => $content
+        ];
+
+        $page->add("content/header", $data);
+        $page->add("content/delete", $data);
+
+        return $page->render($data);
+    }
+
+    /**
+     * Post action to delete movie
+     *
+     *
+     * @return object
+     */
+    public function deleteActionPost() : object
+    {
+        $db = $this->app->db;
+        $response = $this->app->response;
+        $request = $this->app->request;
+        $this->connection();
+        $id = $request->getPost("id") ?: $request->getGet("id");
+
+        $deleteSql = "DELETE FROM content WHERE id = ?;";
+        $db->execute($deleteSql, [$id]);
+
+        return $response->redirect("content/admin");
+    }
+
 
     /**
      * Get for admin-view
@@ -275,137 +392,4 @@ class ContentController implements AppInjectableInterface
 
         return $page->render($data);
     }
-
-//     /**
-//      * POST movie selection, redirecting to CRUD
-//      *
-//      * @return void
-//      */
-//     public function selectActionPost() : object
-//     {
-//         $request = $this->app->request;
-//         $response = $this->app->response;
-//         $db = $this->app->db;
-//
-//         $id = $request->getPost("id", null);
-//         $edit = $request->getPost("edit", null);
-//         $delete = $request->getPost("delete", null);
-//         $add = $request->getPost("add", null);
-//
-//         if ((!$id && $edit) || (!$id && $delete)) {
-//             return $response->redirect("content/select");
-//         }
-//
-//         if ($delete && is_numeric($id)) {
-//             $this->deleteActionPost($id);
-//             return $response->redirect("content/select");
-//         } elseif ($add) {
-//             $this->addActionPost();
-//             //fetching last inserted ID
-//             $id = $db->lastInsertId();
-//             return $response->redirect("content/edit?id=$id");
-//         } elseif ($edit && is_numeric($id)) {
-//             return $response->redirect("content/edit?id=$id");
-//         }
-//     }
-//
-//     /**
-//      * Post action to delete movie
-//      * Doesnt need a landningpage, just removie?
-//      *DONE?
-//      *
-//      * @return object
-//      */
-//     public function deleteActionPost($id) : object
-//     {
-//         $db = $this->app->db;
-//         $response = $this->app->response;
-//         $this->connection();
-//
-//         $deleteSql = "DELETE FROM content WHERE id = ?;";
-//         //vill man få en return med alla här? kanske är nice?
-//         $db->execute($deleteSql, [$id]);
-//
-//         return $response->redirect("content/select");
-//     }
-//
-//     /**
-//      * Post action to add movie
-//      * DONE?
-//      *
-//      * @return object
-//      */
-//     public function addActionPost() : object
-//     {
-//         $db = $this->app->db;
-//         $response = $this->app->response;
-//         $request = $this->app->request;
-//         $this->connection();
-//
-//         $title = $request->getPost("title", "Titel");
-//         $year = $request->getPost("year", 9999);
-//         $image = $request->getPost("image", "img/default.jpg");
-//
-//         $addSql = "INSERT INTO movie (title, year, image) VALUES (?, ?, ?);";
-//         $db->execute($addSql, [$title, $year, $image]);
-//
-//         return $response->redirect("content/select");
-//     }
-//
-//     /**
-//      * Post action to edit movie
-//      *
-//      * @return object
-//      */
-//     public function editActionPost() : object
-//     {
-//         $db = $this->app->db;
-//         $response = $this->app->response;
-//         $request = $this->app->request;
-//         $this->connection();
-//
-//         $id = $request->getPost("id") ?: $request->getGet("id");
-//         // var_dump($id);
-//         $title = $request->getPost("title", "Titel");
-//         $year = $request->getPost("year", 9999);
-//         $image = $request->getPost("image", "img/default.jpg");
-//
-//         $editSql = "UPDATE movie SET title = ?, year = ?, image = ? WHERE id = ?;";
-//         $db->execute($editSql, [$title, $year, $image, $id]);
-//
-//         return $response->redirect("content/select");
-//     }
-//
-//     /**
-//      * Get action to edit movie
-//      *
-//      * @return object
-//      */
-//     public function editAction() : object
-//     {
-//         $title = " Edit movie | oophp";
-//         $db = $this->app->db;
-//         $page = $this->app->page;
-//         $request = $this->app->request;
-//
-//         $this->connection();
-//
-//         $id = $request->getGet("id");
-//
-//         $sql = "SELECT * FROM content WHERE id = ?;";
-//         $chosenMovie = $db->executeFetchAll($sql, [$id]);
-//         // var_dump($chosenMovie);
-//         $chosenMovie = $chosenMovie[0];
-//
-//         $data = [
-//           "movie" => $chosenMovie ?? null,
-//         ];
-//
-//         $page->add("content/header");
-//         $page->add("content/edit", $data);
-//
-//         return $page->render([
-//           "title" => $title
-//         ]);
-//     }
 }
