@@ -4,10 +4,12 @@ namespace Lioo19\Content;
 
 /**
 * Class with supporting functions
+* @SuppressWarnings(PHPMD.UnusedLocalVariable)
 *
 */
 
-class Support {
+class Support
+{
     /**
     * method for activating textfilters
     * @param $content string of content
@@ -22,7 +24,7 @@ class Support {
         foreach ($chosenFiltersArray as $key => $value) {
             $value = trim($value);
         }
-        
+
         $textRes = $textf->parse($content, $chosenFiltersArray);
 
         return $textRes;
@@ -35,7 +37,7 @@ class Support {
      *
      * @return str the formatted slug.
      */
-    function slugify($str)
+    public function slugify($str)
     {
         $str = mb_strtolower(trim($str));
         $str = str_replace(['å','ä'], 'a', $str);

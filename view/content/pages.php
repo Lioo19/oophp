@@ -3,7 +3,6 @@ if (!$res) {
     return;
 }
 ?>
-<p> SAKNAR STATUS</p>
 <table>
     <tr class="first">
         <th>Id</th>

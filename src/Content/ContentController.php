@@ -21,39 +21,22 @@ use Anax\Commons\AppInjectableTrait;
 class ContentController implements AppInjectableInterface
 {
     use AppInjectableTrait;
+    private $contentClass;
 
     /**
-    * @var $support keeping the support class
-    *
-    */
-    private $support;
-
-
-    /**
-     * This is the action for connecting to the database
+     * Setup to database and create new contentClass
      *
-     * @return void
+     * @return object
      */
-    public function connection()
+    public function initialize()
     {
         $this->app->db->connect();
-    }
-
-    /**
-     * Creating a support object and returning it
-     *
-     * @return void
-     */
-    public function createSupport()
-    {
-        $support = new \Lioo19\Content\Support();
-        return $support;
+        $this->contentClass = new Content($this->app->db);
     }
 
     /**
      * This is the index method action
-     * redirecting instantly to init
-     * and booting up the page
+     *
      *
      * @return object
      */
@@ -61,11 +44,8 @@ class ContentController implements AppInjectableInterface
     {
         $title = "Blogg";
         $page = $this->app->page;
-        $db = $this->app->db;
 
-        $this->connection();
-        $sql = "SELECT * FROM content;";
-        $res = $db->executeFetchAll($sql);
+        $res = $this->contentClass->getAllFromContent();
 
         $data = [
             "res" => $res,
@@ -82,30 +62,19 @@ class ContentController implements AppInjectableInterface
 
     /**
      * Showing the blog-view
-     * Fungerar men inte så fin
      *
      * @return object
      */
     public function blogAction() : object
     {
         $title = "blog";
-        $request = $this->app->request;
-        $response = $this->app->response;
         $page = $this->app->page;
-        $db = $this->app->db;
 
-        $this->connection();
-
-        $sql = "SELECT * FROM content;";
-
-        $res = $db->executeFetchAll($sql);
+        $res = $this->contentClass->getAllFromContent();
 
         foreach ($res as $key => $value) {
-            $filters = $value->filter;
-            $data = $value->data;
-
-            $supportObject = $this->createSupport();
-            $value->data = $supportObject->textFilter($data, $filters);
+            $supportObject = $this->contentClass->createSupport();
+            $value->data = $supportObject->textFilter($value->data, $value->filter);
         }
 
         $data = [
@@ -130,7 +99,6 @@ class ContentController implements AppInjectableInterface
     {
         $request = $this->app->request;
         $response = $this->app->response;
-        $db = $this->app->db;
 
         $slug = $request->getGet("slug", null);
 
@@ -150,26 +118,16 @@ class ContentController implements AppInjectableInterface
     {
         $request = $this->app->request;
         $page = $this->app->page;
-        $db = $this->app->db;
         $title = $request->getGet("slug", null);
 
-        $this->connection();
-
         if ($title) {
-            $sql = "SELECT * FROM content WHERE slug = ?;";
-            $content = $db->executeFetchAll($sql, [$title]);
+            $content = $this->contentClass->getSlugContent($title);
         } else {
-            $sql = "SELECT * FROM content WHERE id = 1;";
-            $content = $db->executeFetchAll($sql);
+            $content = $this->contentClass->getIdContent(1);
         }
 
-        $content = $content[0];
-
-        $filters = $content->filter;
-        $data = $content->data;
-
-        $supportObject = $this->createSupport();
-        $content->data = $supportObject->textFilter($data, $filters);
+        $supportObject = $this->contentClass->createSupport();
+        $content->data = $supportObject->textFilter($content->data, $content->filter);
 
         $data = [
             "content"   => $content
@@ -191,13 +149,10 @@ class ContentController implements AppInjectableInterface
     public function adminAction() : object
     {
         $title = "ADMIN";
-        $db = $this->app->db;
         $page = $this->app->page;
         $request = $this->app->request;
 
-        $this->connection();
-        $sql = "SELECT * FROM content;";
-        $res = $db->executeFetchAll($sql);
+        $res = $this->contentClass->getAllFromContent();
 
         $data = [
             "title"         => $title,
@@ -218,15 +173,11 @@ class ContentController implements AppInjectableInterface
     public function editAction() : object
     {
         $title = "Edit";
-        $db = $this->app->db;
         $page = $this->app->page;
         $request = $this->app->request;
         $id = $request->getGet("id", null);
 
-        $this->connection();
-        $sql = "SELECT * FROM content WHERE id = ?;";
-        $content = $db->executeFetchAll($sql, [$id]);
-        $content = $content[0];
+        $content = $this->contentClass->getIdContent($id);
 
         $data = [
             "title"         => $title,
@@ -241,16 +192,13 @@ class ContentController implements AppInjectableInterface
 
     /**
      * POST for edit-option, edits in database
-     * FUNKAR MEN INGEN RESPONS PÅ ATT INLÄGGET SPARAS
      *
      * @return object
      */
     public function editActionPost() : object
     {
-        $db = $this->app->db;
         $response = $this->app->response;
         $request = $this->app->request;
-        $this->connection();
 
         $contentId = $request->getPost("contentId") ?: $request->getGet("id");
 
@@ -263,30 +211,38 @@ class ContentController implements AppInjectableInterface
         $contentPublish = $request->getPost("contentPublish", null);
         $contentId = $request->getPost("contentId", null);
 
-        $supportObject = $this->createSupport();
+        $supportObject = $this->contentClass->createSupport();
 
         if (!$contentSlug) {
             $contentSlug = $supportObject->slugify($contentTitle);
         }
 
         if ($contentSlug) {
-            $sqlSlug = "SELECT slug, id FROM content WHERE slug = ?;";
-            $res = $db->executeFetch($sqlSlug, [$contentSlug]);
-            if ($res) {
+            $res = $this->contentClass->getSlugContent($contentSlug);
+            if (!$res) {
                 $contentSlug = $contentSlug . $contentId;
             }
         }
 
         if ($contentPath) {
-            $sqlPath = "SELECT path, id FROM content WHERE path = ?;";
-            $resPath = $db->executeFetch($sqlPath, [$contentPath]);
+            $resPath = $this->contentClass->getPathContent($contentPath);
             if ($resPath) {
                 $contentPath = $contentPath . $contentId;
             }
+        } else {
+            $contentPath = null;
         }
 
-        $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
-        $db->execute($sql, [$contentTitle, $contentPath, $contentSlug, $contentData, $contentType, $contentFilter, $contentPublish, $contentId]);
+        $this->contentClass->editContent(
+            $contentTitle,
+            $contentPath,
+            $contentSlug,
+            $contentData,
+            $contentType,
+            $contentFilter,
+            $contentPublish,
+            $contentId
+        );
 
         return $response->redirect("content/admin");
     }
@@ -299,9 +255,7 @@ class ContentController implements AppInjectableInterface
     public function createAction() : object
     {
         $title = "Nytt inlägg";
-        $session = $this->app->session;
         $page = $this->app->page;
-        $db = $this->app->db;
 
         $page->add("content/header");
         $page->add("content/create");
@@ -318,21 +272,16 @@ class ContentController implements AppInjectableInterface
      */
     public function createActionPost() : object
     {
-        $db = $this->app->db;
         $response = $this->app->response;
         $request = $this->app->request;
-        $this->connection();
 
         $contentTitle = $request->getPost("contentTitle") ?: $request->getGet("title");
 
-        $addSql = "INSERT INTO content (title) VALUES (?);";
-        $db->execute($addSql, [$contentTitle]);
+        $this->contentClass->createContent($contentTitle);
 
-        $idSql = "SELECT id FROM content WHERE title = ?;";
-        $contentId = $db->executeFetchAll($idSql, [$contentTitle]);
+        $contentId = $this->contentClass->getIdContentByTitle($contentTitle);
         $contentId = json_encode($contentId[0]);
         $contentId = substr($contentId, 6, -1);
-        var_dump($contentId);
 
         return $response->redirect("content/edit?id=$contentId");
     }
@@ -345,15 +294,11 @@ class ContentController implements AppInjectableInterface
     public function deleteAction() : object
     {
         $title = "delete";
-        $db = $this->app->db;
         $page = $this->app->page;
         $request = $this->app->request;
         $id = $request->getGet("id", null);
 
-        $this->connection();
-        $sql = "SELECT * FROM content WHERE id = ?;";
-        $content = $db->executeFetchAll($sql, [$id]);
-        $content = $content[0];
+        $content = $this->contentClass->getIdContent($id);
 
         $data = [
             "title"         => $title,
@@ -374,14 +319,11 @@ class ContentController implements AppInjectableInterface
      */
     public function deleteActionPost() : object
     {
-        $db = $this->app->db;
         $response = $this->app->response;
         $request = $this->app->request;
-        $this->connection();
         $id = $request->getPost("id") ?: $request->getGet("id");
 
-        $deleteSql = "DELETE FROM content WHERE id = ?;";
-        $db->execute($deleteSql, [$id]);
+        $this->contentClass->deleteContent($id);
 
         return $response->redirect("content/admin");
     }
@@ -395,24 +337,10 @@ class ContentController implements AppInjectableInterface
     public function pagesAction() : object
     {
         $title = "Visa sidor";
-        $db = $this->app->db;
         $page = $this->app->page;
         $request = $this->app->request;
 
-        $this->connection();
-        $sql = <<<EOD
-SELECT
-    *,
-    CASE
-        WHEN (deleted <= NOW()) THEN "isDeleted"
-        WHEN (published <= NOW()) THEN "isPublished"
-        ELSE "notPublished"
-    END AS status
-FROM content
-WHERE type=?
-;
-EOD;
-        $res = $db->executeFetchAll($sql, ["page"]);
+        $res = $this->contentClass->getPages();
 
         $data = [
             "title"         => $title,
@@ -434,26 +362,16 @@ EOD;
     {
         $request = $this->app->request;
         $page = $this->app->page;
-        $db = $this->app->db;
         $title = $request->getGet("slug", null);
 
-        $this->connection();
-
         if ($title) {
-            $sql = "SELECT * FROM content WHERE slug = ?;";
-            $content = $db->executeFetchAll($sql, [$title]);
+            $content = $this->contentClass->getSlugContent($title);
         } else {
-            $sql = "SELECT * FROM content WHERE id = 1;";
-            $content = $db->executeFetchAll($sql);
+            $content = $this->contentClass->getIdContent(1);
         }
 
-        $content = $content[0];
-
-        $filters = $content->filter;
-        $data = $content->data;
-
-        $supportObject = $this->createSupport();
-        $content->data = $supportObject->textFilter($data, $filters);
+        $supportObject = $this->contentClass->createSupport();
+        $content->data = $supportObject->textFilter($content->data, $content->filter);
 
         $data = [
             "content"   => $content

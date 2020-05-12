@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for blog
+ * Controller for content part of content
  */
 return [
     "routes" => [
